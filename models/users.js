@@ -42,6 +42,11 @@ const userSchema = new mongoose.Schema({
     trim: true,
     required: true,
   },
+  image: {
+    type: String,
+    trim: true,
+    required: true,
+  },
   salt: String,
   createDate: {
     type: Date,

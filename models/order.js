@@ -30,5 +30,15 @@ const orderSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  deposit: {
+    type: String,
+    trim: true,
+    required: true,
+  },
+  image: {
+    type: String,
+    trim: true,
+    required: true,
+  },
 });
 module.exports = mongoose.model("Order", orderSchema);

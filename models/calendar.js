@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 
-const contactSchema = new mongoose.Schema({
-  contactId: {
+const calendarSchema = new mongoose.Schema({
+  dateTime: {
     type: String,
     trim: true,
     required: true,
   },
-  email: {
+  local: {
     type: String,
     trim: true,
     required: true,
@@ -17,4 +17,4 @@ const contactSchema = new mongoose.Schema({
     required: true,
   },
 });
-module.exports = mongoose.model("Contact", contactSchema);
+module.exports = mongoose.model("Calendar", calendarSchema);
