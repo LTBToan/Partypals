@@ -4,7 +4,8 @@ const controllersUser = require("../controllers/user");
 const validator = require("../validator");
 const router = express.Router();
 
-router.get("/signIn", controllersAuth.signIn);
+router.post("/signIn", controllersAuth.signIn);
+router.post("/signUp", controllersAuth.signUp);
 router.get("/signOut", controllersAuth.signOut);
 router.param("login", controllersUser.userByLogin);
 router.put("/verify-email", controllersAuth.verifyEmail);

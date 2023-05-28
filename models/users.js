@@ -53,13 +53,9 @@ const userSchema = new mongoose.Schema({
     default: Date.now,
   },
   updateDate: Date,
-  roleId: {
-    type: ObjectId,
-    ref: "Role",
-  },
-  contactId: {
-    type: ObjectId,
-    ref: "Contact",
+  role: {
+    type: String,
+    default: "user",
   },
 });
 userSchema

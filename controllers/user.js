@@ -1,6 +1,6 @@
 const fs = require("fs");
 const _ = require("lodash");
-const User = require("../models/user");
+const User = require("../models/users");
 
 exports.userByLogin = (req, res, next, accountID) => {
   User.findOne({ accountID }).exec((err, user) => {
