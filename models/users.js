@@ -3,11 +3,6 @@ const { v1: uuidv1 } = require("uuid");
 const crypto = require("crypto");
 const { ObjectId } = mongoose.Schema;
 const userSchema = new mongoose.Schema({
-  accountID: {
-    type: String,
-    trim: true,
-    required: true,
-  },
   name: {
     type: String,
     trim: true,
@@ -19,11 +14,6 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   phone: {
-    type: String,
-    trim: true,
-    required: true,
-  },
-  userName: {
     type: String,
     trim: true,
     required: true,
@@ -40,7 +30,7 @@ const userSchema = new mongoose.Schema({
   status: {
     type: String,
     trim: true,
-    required: true,
+    default: 'active',
   },
   image: {
     type: String,
