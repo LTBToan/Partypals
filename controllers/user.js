@@ -15,6 +15,7 @@ exports.userByLogin = (req, res, next, id) => {
 };
 exports.hasAuthorization = (req, res, next) => {
   const authHeader = req.headers.authorization || req.headers.Authorization;
+  console.log(authHeader);
   if (!authHeader || !authHeader.startsWith("Bearer "))
     return res
       .status(401)
@@ -89,7 +90,12 @@ exports.updateUser = (req, res, next) => {
 
 exports.deleteUser = (req, res, next) => {
   let user = req.profile;
-  user.remove((err, user) => {
+  user.status= req.query.status;
+  if(req.query.status === undefined){
+    return res.status(404).json({message:"User deleted failed"});
+  }
+  user.updated = Date.now();
+  user.save((err, result) => {
     if (err) {
       return res.status(400).json({
         error: err,

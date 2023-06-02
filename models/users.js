@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
   address: {
     type: String,
     trim: true,
-    required: true,
+    default: null,
   },
   hashed_password: {
     type: String,
@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema({
   image: {
     type: String,
     trim: true,
-    required: true,
+    default: null,
   },
   salt: String,
   createDate: {

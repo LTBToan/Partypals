@@ -24,14 +24,6 @@ module.exports = {
                 type:"string",
                 example: "0123456789"
               },
-              address: {
-                type:"string",
-                example: "Hồ Chí Minh city"
-              },
-              image:{
-                type:"string",
-                example:"Hình ảnh"
-              }
             },
           },
         },
