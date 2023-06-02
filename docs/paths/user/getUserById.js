@@ -6,11 +6,10 @@ module.exports = {
       {
         in: "path",
         name: "userId",
-        security: [{ BearerAuth: [] }],
-        // required: true,
         description: "User ID",
         schema: {
-          type: "String",
+          type: "string",
+          format: "ObjectId",
         },
       },
     ],
@@ -19,5 +18,11 @@ module.exports = {
         description: "Success",
       },
     },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
+    description: "Requires authentication with a bearer token.",
   },
 };

@@ -2,27 +2,40 @@ const fs = require("fs");
 const _ = require("lodash");
 const User = require("../models/users");
 
-exports.userByLogin = (req, res, next, accountID) => {
-  User.findOne({ accountID }).exec((err, user) => {
-    if (err || !user) {
+exports.userByLogin = (req, res, next, id) => {
+  User.findById(id).exec((err, users) => {
+    if (err || !users) {
       return res.status(400).json({
         error: "User not found",
       });
     }
-    // req.profile = user;
+    req.profile = users;
     next();
   });
 };
 exports.hasAuthorization = (req, res, next) => {
-  let sameUser = req.profile && req.auth && req.profile._id == req.auth._id;
-  let adminUser = req.profile && req.auth && req.auth.role === "admin";
-  const authorized = sameUser || adminUser;
-  if (!authorized) {
-    return res.status(403).json({
-      error: "User is not authorized to perform this action",
-    });
+  const authHeader = req.headers.authorization || req.headers.Authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer "))
+    return res
+      .status(401)
+      .json({ message: "Access Denied. No token provided!" });
+  const token = authHeader.split(" ")[1];
+  if (!token) {
+    return res.status(401).json({ message: 'Không tìm thấy mã token, truy cập bị từ chối' });
   }
-  next();
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log(decoded);
+    if (decoded.roleId !== 'admin') {
+      return res.status(403).json({ message: 'Người dùng không có quyền truy cập' });
+    }
+    req.user = decoded;
+    next();
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ message: 'Mã token không hợp lệ, truy cập bị từ chối' });
+  }
 };
 
 exports.allUsers = (req, res) => {
@@ -35,7 +48,7 @@ exports.allUsers = (req, res) => {
     .then((count) => {
       totalItems = count;
       return User.find({ name: { $regex: name, $options: "i" } })
-        .skip((currentPage - 1) * perPage)
+        .skip((currentPage - 1) * perPage) 
         .select("accountID name")
         .limit(perPage)
         .sort({ created: -1 });
@@ -53,10 +66,9 @@ exports.allUsers = (req, res) => {
 };
 
 exports.getUser = (req, res) => {
-  req.profile.hashed_password = undefined;
-  req.profile.salt = undefined;
   return res.json(req.profile);
 };
+
 
 exports.updateUser = (req, res, next) => {
   let user = req.profile;

@@ -55,12 +55,12 @@ exports.signIn = (req, res) => {
       });
     }
     const token = jwt.sign(
-      { _id: user._id, roleId: user.roleId },
+      { _id: user._id, roleId: user.role },
       process.env.JWT_SECRET
     );
     res.cookie("t", token, { expire: new Date() + 9999 });
-    const { _id, photo, name, email, roleId } = user;
-    return res.json({ token, user: { _id, photo, email, name, roleId } });
+    const { _id,image , name, email, role } = user;
+    return res.json({ token, user: { _id, image, email, name, role } });
   });
 };
 
