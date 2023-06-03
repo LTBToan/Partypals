@@ -13,31 +13,6 @@ exports.userByLogin = (req, res, next, id) => {
     next();
   });
 };
-exports.hasAuthorization = (req, res, next) => {
-  const authHeader = req.headers.authorization || req.headers.Authorization;
-  console.log(authHeader);
-  if (!authHeader || !authHeader.startsWith("Bearer "))
-    return res
-      .status(401)
-      .json({ message: "Access Denied. No token provided!" });
-  const token = authHeader.split(" ")[1];
-  if (!token) {
-    return res.status(401).json({ message: 'Không tìm thấy mã token, truy cập bị từ chối' });
-  }
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(decoded);
-    if (decoded.roleId !== 'admin') {
-      return res.status(403).json({ message: 'Người dùng không có quyền truy cập' });
-    }
-    req.user = decoded;
-    next();
-  } catch (error) {
-    console.error(error);
-    res.status(401).json({ message: 'Mã token không hợp lệ, truy cập bị từ chối' });
-  }
-};
 
 exports.allUsers = (req, res) => {
   const currentPage = parseInt(req.query.page) || 1;
