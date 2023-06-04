@@ -20,6 +20,10 @@ module.exports = {
                 type: "string",
                 example: "Dragoncute!123",
               },
+              phone: {
+                type:"string",
+                example: "0123456789"
+              },
             },
           },
         },

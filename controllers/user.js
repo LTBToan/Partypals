@@ -2,27 +2,16 @@ const fs = require("fs");
 const _ = require("lodash");
 const User = require("../models/users");
 
-exports.userByLogin = (req, res, next, accountID) => {
-  User.findOne({ accountID }).exec((err, user) => {
-    if (err || !user) {
+exports.userByLogin = (req, res, next, id) => {
+  User.findById(id).exec((err, users) => {
+    if (err || !users) {
       return res.status(400).json({
         error: "User not found",
       });
     }
-    // req.profile = user;
+    req.profile = users;
     next();
   });
-};
-exports.hasAuthorization = (req, res, next) => {
-  let sameUser = req.profile && req.auth && req.profile._id == req.auth._id;
-  let adminUser = req.profile && req.auth && req.auth.role === "admin";
-  const authorized = sameUser || adminUser;
-  if (!authorized) {
-    return res.status(403).json({
-      error: "User is not authorized to perform this action",
-    });
-  }
-  next();
 };
 
 exports.allUsers = (req, res) => {
@@ -35,7 +24,7 @@ exports.allUsers = (req, res) => {
     .then((count) => {
       totalItems = count;
       return User.find({ name: { $regex: name, $options: "i" } })
-        .skip((currentPage - 1) * perPage)
+        .skip((currentPage - 1) * perPage) 
         .select("accountID name")
         .limit(perPage)
         .sort({ created: -1 });
@@ -53,10 +42,9 @@ exports.allUsers = (req, res) => {
 };
 
 exports.getUser = (req, res) => {
-  req.profile.hashed_password = undefined;
-  req.profile.salt = undefined;
   return res.json(req.profile);
 };
+
 
 exports.updateUser = (req, res, next) => {
   let user = req.profile;
@@ -77,7 +65,12 @@ exports.updateUser = (req, res, next) => {
 
 exports.deleteUser = (req, res, next) => {
   let user = req.profile;
-  user.remove((err, user) => {
+  user.status= req.query.status;
+  if(req.query.status === undefined){
+    return res.status(404).json({message:"User deleted failed"});
+  }
+  user.updated = Date.now();
+  user.save((err, result) => {
     if (err) {
       return res.status(400).json({
         error: err,
