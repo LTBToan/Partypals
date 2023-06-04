@@ -6,8 +6,8 @@ const router = express.Router();
 
 router.get("/users", requireSignIn,checkRole(["admin"]), controllersUser.allUsers);
 router.get("/user/:userId", requireSignIn,checkRole(["admin"]),controllersUser.getUser);
-router.put("/user/:userId", requireSignIn, controllersUser.updateUser);
-router.delete("/user/:userId", controllersUser.deleteUser);
+router.put("/user/:userId", requireSignIn, checkRole(["admin"]),controllersUser.updateUser);
+router.delete("/user/:userId",requireSignIn,checkRole(["admin"]) ,controllersUser.deleteUser);
 router.param("userId",controllersUser.userByLogin);
 
 module.exports = router;

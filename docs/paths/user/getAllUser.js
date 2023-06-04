@@ -2,6 +2,7 @@ module.exports = {
   get: {
     tags: ["User"],
     summary: "Return all users",
+    security: [{ BearerAuth: [] }],
     parameters: [
       {
         in: "query",
