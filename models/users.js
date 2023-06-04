@@ -47,6 +47,7 @@ const userSchema = new mongoose.Schema({
     trim: true,
     required: true,
   },
+  calendar: [{ type: ObjectId, ref: "Calendar" }],
   salt: String,
   createDate: {
     type: Date,
@@ -84,4 +85,4 @@ userSchema.methods = {
     }
   },
 };
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("Users", userSchema);

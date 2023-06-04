@@ -4,9 +4,12 @@ const { requireSignIn } = require("../controllers/auth");
 const router = express.Router();
 
 router.get("/users", controllersUser.allUsers);
-router.get("/user/:login", controllersUser.getUser);
+router.get("/user/:userId", controllersUser.getUser);
 router.put("/user/:userId", requireSignIn, controllersUser.updateUser);
 router.delete("/user/:userId", requireSignIn, controllersUser.deleteUser);
-router.param("login", controllersUser.userByLogin);
+router.put("/user/calendar", requireSignIn, controllersUser.postCalendar);
+router.put("/user/calendar", requireSignIn, controllersUser.deleteCalendar);
+
+router.param("userId", controllersUser.userByLogin);
 
 module.exports = router;

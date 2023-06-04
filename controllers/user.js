@@ -2,14 +2,14 @@ const fs = require("fs");
 const _ = require("lodash");
 const User = require("../models/users");
 
-exports.userByLogin = (req, res, next, accountID) => {
-  User.findOne({ accountID }).exec((err, user) => {
-    if (err || !user) {
+exports.userByLogin = (req, res, next, id) => {
+  User.findById(id).exec((err, users) => {
+    if (err || !users) {
       return res.status(400).json({
         error: "User not found",
       });
     }
-    // req.profile = user;
+    req.profile = users;
     next();
   });
 };
@@ -84,5 +84,45 @@ exports.deleteUser = (req, res, next) => {
       });
     }
     res.json({ message: "User deleted successfully" });
+  });
+};
+
+exports.postCalendar = (req, res) => {
+  User.findByIdAndUpdate(
+    req.body.userId,
+    {
+      $push: {
+        calendar: {
+          dateTime: req.body.dateTime,
+          local: req.body.local,
+          description: req.body.description,
+        },
+      },
+    },
+    { new: true }
+  ).exec((err, result) => {
+    if (err) {
+      return res.status(400).json({
+        error: err,
+      });
+    } else {
+      res.json(result);
+    }
+  });
+};
+
+exports.deleteCalendar = (req, res) => {
+  User.findByIdAndUpdate(
+    req.body.userId,
+    { $pull: { calendar: { _id: req.body.calendarId } } },
+    { new: true }
+  ).exec((err, result) => {
+    if (err) {
+      return res.status(400).json({
+        error: err,
+      });
+    } else {
+      res.json(result);
+    }
   });
 };
