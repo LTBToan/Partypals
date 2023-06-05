@@ -1,6 +1,7 @@
 const fs = require("fs");
 const _ = require("lodash");
 const User = require("../models/users");
+const Calendar = require("../models/calendar");
 
 exports.userByLogin = (req, res, next, id) => {
   User.findById(id).exec((err, users) => {
@@ -13,17 +14,6 @@ exports.userByLogin = (req, res, next, id) => {
     next();
   });
 };
-exports.hasAuthorization = (req, res, next) => {
-  let sameUser = req.profile && req.auth && req.profile._id == req.auth._id;
-  let adminUser = req.profile && req.auth && req.auth.role === "admin";
-  const authorized = sameUser || adminUser;
-  if (!authorized) {
-    return res.status(403).json({
-      error: "User is not authorized to perform this action",
-    });
-  }
-  next();
-};
 
 exports.allUsers = (req, res) => {
   const currentPage = parseInt(req.query.page) || 1;
@@ -35,7 +25,7 @@ exports.allUsers = (req, res) => {
     .then((count) => {
       totalItems = count;
       return User.find({ name: { $regex: name, $options: "i" } })
-        .skip((currentPage - 1) * perPage)
+        .skip((currentPage - 1) * perPage) 
         .select("accountID name")
         .limit(perPage)
         .sort({ created: -1 });
@@ -53,10 +43,9 @@ exports.allUsers = (req, res) => {
 };
 
 exports.getUser = (req, res) => {
-  req.profile.hashed_password = undefined;
-  req.profile.salt = undefined;
   return res.json(req.profile);
 };
+
 
 exports.updateUser = (req, res, next) => {
   let user = req.profile;
@@ -77,7 +66,12 @@ exports.updateUser = (req, res, next) => {
 
 exports.deleteUser = (req, res, next) => {
   let user = req.profile;
-  user.remove((err, user) => {
+  user.status= req.query.status;
+  if(req.query.status === undefined){
+    return res.status(404).json({message:"User deleted failed"});
+  }
+  user.updated = Date.now();
+  user.save((err, result) => {
     if (err) {
       return res.status(400).json({
         error: err,
@@ -87,42 +81,47 @@ exports.deleteUser = (req, res, next) => {
   });
 };
 
+exports.getCalendar = async (req, res) => {
+  const calendar = await Calendar.find({ userId: req.profile._id });
+  res.status(200).json(calendar);
+};
+
 exports.postCalendar = (req, res) => {
-  User.findByIdAndUpdate(
-    req.body.userId,
-    {
-      $push: {
-        calendar: {
-          dateTime: req.body.dateTime,
-          local: req.body.local,
-          description: req.body.description,
-        },
-      },
-    },
-    { new: true }
-  ).exec((err, result) => {
+  let calendar = new Calendar(req.body);
+  calendar.userId = req.profile._id;
+  calendar.save((err, result) => {
     if (err) {
       return res.status(400).json({
         error: err,
       });
-    } else {
-      res.json(result);
     }
+    res.json(result);
   });
 };
 
-exports.deleteCalendar = (req, res) => {
-  User.findByIdAndUpdate(
-    req.body.userId,
-    { $pull: { calendar: { _id: req.body.calendarId } } },
-    { new: true }
-  ).exec((err, result) => {
+exports.putCalendar = async (req, res, next) => {
+  let calendar = await Calendar.findById(req.params.calendarId);
+  calendar = _.extend(calendar, req.body);
+  calendar.save((err, result) => {
     if (err) {
       return res.status(400).json({
         error: err,
       });
-    } else {
-      res.json(result);
     }
+    res.json(calendar);
+  });
+};
+
+exports.deleteCalendar = async (req, res) => {
+  const calendar = await Calendar.findById(req.params.calendarId);
+  calendar.remove((err, calendar) => {
+    if (err) {
+      return res.status(400).json({
+        error: err,
+      });
+    }
+    res.json({
+      message: "calendar deleted successfully",
+    });
   });
 };

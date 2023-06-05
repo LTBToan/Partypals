@@ -1,13 +1,13 @@
 module.exports = {
-  get: {
-    tags: ["User"],
-    summary: "Return user by ID",
+  delete: {
+    tags: ["Calendar"],
+    summary: "delete Calendar",
     parameters: [
       {
         in: "path",
-        name: "userId",
+        name: "calendarId",
         security: [{ BearerAuth: [] }],
-        description: "User ID",
+        description: "calendar ID",
         schema: {
           type: "string",
           format: "ObjectId",

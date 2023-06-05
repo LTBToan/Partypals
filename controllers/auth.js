@@ -2,6 +2,7 @@ const dotenv = require("dotenv");
 const jwt = require("jsonwebtoken");
 const User = require("../models/users");
 const expressJwt = require("express-jwt");
+const crypto = require('crypto');
 const _ = require("lodash");
 const { OAuth2Client } = require("google-auth-library");
 const { sendEmail } = require("../helpers");
@@ -54,12 +55,12 @@ exports.signIn = (req, res) => {
       });
     }
     const token = jwt.sign(
-      { _id: user._id, roleId: user.roleId },
+      { _id: user._id, roleId: user.role },
       process.env.JWT_SECRET
     );
     res.cookie("t", token, { expire: new Date() + 9999 });
-    const { _id, photo, name, email, roleId } = user;
-    return res.json({ token, user: { _id, email, name, roleId } });
+    const { _id, image, name, email, role } = user;
+    return res.json({ token, user: { _id, image, email, name, role } });
   });
 };
 
@@ -68,7 +69,25 @@ exports.signOut = (req, res) => {
   return res.json({ message: "SignOut success!" });
 };
 
+// exports.requireSignIn = () => {
+//   return expressJwt({
+//     secret: process.env.JWT_SECRET,
+//     algorithms: ["HS256"],
+//     userProperty: "auth",
+//   });
+// }
+
 exports.requireSignIn = expressJwt({
   secret: process.env.JWT_SECRET,
+  algorithms: ["HS256"],
   userProperty: "auth",
 })
+
+exports.checkRole = (roles) => (req, res, next) => {
+  const { roleId } = req.auth;
+  console.log(roleId);
+  if (!roles.includes(roleId)) {
+    return res.status(403).json({ message: "Unauthorized" });
+  }
+  next();
+};

@@ -1,7 +1,7 @@
 module.exports = {
   get: {
-    tags: ["User"],
-    summary: "Return user by ID",
+    tags: ["Calendar"],
+    summary: "get Calendar",
     parameters: [
       {
         in: "path",
