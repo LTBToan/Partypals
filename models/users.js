@@ -30,13 +30,21 @@ const userSchema = new mongoose.Schema({
   status: {
     type: String,
     trim: true,
-    default: 'active',
+    default: "active",
   },
   image: {
     type: String,
     trim: true,
     default: null,
   },
+  calendar: [
+    {
+      dateTime: String,
+      local: String,
+      description: String,
+      userId: { type: ObjectId, ref: "User" },
+    },
+  ],
   salt: String,
   createDate: {
     type: Date,
@@ -74,4 +82,4 @@ userSchema.methods = {
     }
   },
 };
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("Users", userSchema);

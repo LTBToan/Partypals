@@ -9,6 +9,30 @@ router.get("/user/:userId", requireSignIn,checkRole(["admin"]),controllersUser.g
 router.post("/user/create", requireSignIn,checkRole(["admin"]),controllersUser.createUser);
 router.put("/user/:userId", requireSignIn, checkRole(["admin"]),controllersUser.updateUser);
 router.delete("/user/:userId",requireSignIn,checkRole(["admin"]) ,controllersUser.deleteUser);
+router.get(
+  "/calendar/:userId",
+  requireSignIn,
+  checkRole(["admin", "user"]),
+  controllersUser.getCalendar
+);
+router.post(
+  "/calendar/:userId",
+  requireSignIn,
+  checkRole(["admin", "user"]),
+  controllersUser.postCalendar
+);
+router.put(
+  "/calendar/:calendarId",
+  requireSignIn,
+  checkRole(["admin", "user"]),
+  controllersUser.putCalendar
+);
+router.delete(
+  "/calendar/:calendarId",
+  requireSignIn,
+  checkRole(["admin", "user"]),
+  controllersUser.deleteCalendar
+);
 router.param("userId",controllersUser.userByLogin);
 
 module.exports = router;

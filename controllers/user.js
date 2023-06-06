@@ -1,6 +1,7 @@
 const fs = require("fs");
 const _ = require("lodash");
 const User = require("../models/users");
+const Calendar = require("../models/calendar");
 
 exports.userByLogin = (req, res, next, id) => {
   User.findById(id).exec((err, users) => {
@@ -88,5 +89,50 @@ exports.deleteUser = (req, res, next) => {
       });
     }
     res.json({ message: "User deleted successfully" });
+  });
+};
+
+exports.getCalendar = async (req, res) => {
+  const calendar = await Calendar.find({ userId: req.profile._id });
+  res.status(200).json(calendar);
+};
+
+exports.postCalendar = (req, res) => {
+  let calendar = new Calendar(req.body);
+  calendar.userId = req.profile._id;
+  calendar.save((err, result) => {
+    if (err) {
+      return res.status(400).json({
+        error: err,
+      });
+    }
+    res.json(result);
+  });
+};
+
+exports.putCalendar = async (req, res, next) => {
+  let calendar = await Calendar.findById(req.params.calendarId);
+  calendar = _.extend(calendar, req.body);
+  calendar.save((err, result) => {
+    if (err) {
+      return res.status(400).json({
+        error: err,
+      });
+    }
+    res.json(calendar);
+  });
+};
+
+exports.deleteCalendar = async (req, res) => {
+  const calendar = await Calendar.findById(req.params.calendarId);
+  calendar.remove((err, calendar) => {
+    if (err) {
+      return res.status(400).json({
+        error: err,
+      });
+    }
+    res.json({
+      message: "calendar deleted successfully",
+    });
   });
 };

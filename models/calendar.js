@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const { ObjectId } = mongoose.Schema;
 const calendarSchema = new mongoose.Schema({
   dateTime: {
     type: String,
@@ -15,6 +15,10 @@ const calendarSchema = new mongoose.Schema({
     type: String,
     trim: true,
     required: true,
+  },
+  userId: {
+    type: ObjectId,
+    ref: "User",
   },
 });
 module.exports = mongoose.model("Calendar", calendarSchema);

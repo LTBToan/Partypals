@@ -39,7 +39,7 @@ const options = {
     schemes: ["http", "https"],
     servers: [
       {
-        url: "http://localhost:8080/api",
+        url: "https://partypal-vwog.onrender.com/api",
       },
     ],
   },

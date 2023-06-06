@@ -10,11 +10,11 @@ module.exports = {
             properties: {
               email: {
                 type: "string",
-                example: "longnlp14@gmail.com",
+                example: "dragoncute@gmail.com",
               },
               password: {
                 type: "string",
-                example: "Long!123",
+                example: "dragoncute",
               },
             },
           },
