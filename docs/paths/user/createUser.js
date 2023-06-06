@@ -1,6 +1,7 @@
 module.exports = {
     post: {
       tags: ["User"],
+      security: [{ BearerAuth: [] }],
       requestBody: {
         required: true,
         content: {
