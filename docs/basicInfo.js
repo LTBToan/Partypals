@@ -25,6 +25,13 @@ module.exports = {
           ? "Development server"
           : "Production server",
     },
+    {
+      url: "http://localhost:8080/api",
+      description:
+        process.env.NODE_ENV === "development"
+          ? "Development local"
+          : "Production local",
+    }
   ],
   security: [{ BearerAuth: [] }],
 };
