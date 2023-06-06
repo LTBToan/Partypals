@@ -45,6 +45,17 @@ exports.getUser = (req, res) => {
   return res.json(req.profile);
 };
 
+exports.createUser = async (req, res, next) => {
+  const userExists = await User.findOne({ email: req.body.email });
+  if (userExists)
+    return res.status(403).json({
+      message: "Email is taken!",
+    });
+  const user = new User(req.body);
+  await user.save();
+  res.status(200).json({ message: "Create Success" });
+};
+
 
 exports.updateUser = (req, res, next) => {
   let user = req.profile;
