@@ -6,12 +6,24 @@ exports.sendEmail = (emailData) => {
     secure: false,
     requireTLS: true,
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASSWORD,
+      user: "clone6290@gmail.com",
+      pass: "ydecendajntcafgz",
     },
   });
   return transporter
     .sendMail(emailData)
     .then((info) => console.log(`Message sent: ${info.response}`))
     .catch((err) => console.log(`Problem sending email: ${err}`));
+};
+
+exports.generateRandomPassword = (length) => {
+  const characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let password = "";
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    password += characters[randomIndex];
+  }
+
+  return password;
 };

@@ -1,6 +1,7 @@
 const signIn = require("./signIn");
 const signUp = require("./signUp");
 const signOut = require("./signOut");
+const verifyEmail = require("./verifyEmail");
 module.exports = {
   "/signIn": {
     ...signIn,
@@ -10,5 +11,8 @@ module.exports = {
   },
   "/signOut": {
     ...signOut,
+  },
+  "/verifyEmail": {
+    ...verifyEmail,
   },
 };

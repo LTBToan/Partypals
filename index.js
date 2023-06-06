@@ -75,5 +75,5 @@ app.use(function (err, req, res, next) {
 const port = process.env.PORT || 8080;
 // app.options("*", cors());
 app.listen(port, () => {
-  console.log(`a node js api listening on port ${port}`);
+  console.log(`a node js api listening on port ${port}//http://localhost:8080/api-docs`);
 });
