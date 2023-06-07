@@ -2,22 +2,15 @@ const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema;
 
 const productSchema = new mongoose.Schema({
-  productID: {
-    type: String,
-    trim: true,
+  accountID: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Users",
     required: true,
   },
-  accountID: {
-    type: ObjectId,
-    ref: "User",
-  },
   categoryID: {
-    type: ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "Category",
-  },
-  productIDetailD: {
-    type: ObjectId,
-    ref: "ProductDetail",
+    required: true,
   },
   productName: {
     type: String,
@@ -48,6 +41,6 @@ const productSchema = new mongoose.Schema({
     type: String,
     trim: true,
     required: true,
-  },
+  }
 });
 module.exports = mongoose.model("Product", productSchema);
