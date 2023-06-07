@@ -9,6 +9,7 @@ const mongoose = require("mongoose");
 exports.getProductById = async (req, res) => {
   try {
     const productId = req.params.productID;
+    console.log(productId);
     const product = await Product.findById(productId);
 
     if (!product) {
@@ -34,10 +35,6 @@ exports.getProductsByName = async (req, res) => {
     totalItems = countDocuments;
 
     const products = await Product.find({ productName: { $regex: name, $options: "i" } })
-      .populate({
-        path: 'categoryID',
-        select: 'categoryName'
-      })
       .skip((currentPage - 1) * perPage)
       .limit(perPage)
       .sort({ created: -1 });
@@ -66,10 +63,6 @@ exports.allProducts = async (req, res) => {
     totalItems = countDocuments;
 
     const products = await Product.find()
-      .populate({
-        path: 'categoryID',
-        select: 'categoryName'
-      })
       .skip((currentPage - 1) * perPage)
       .limit(perPage)
       .sort({ created: -1 });

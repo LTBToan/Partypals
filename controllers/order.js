@@ -14,10 +14,6 @@ exports.allOrder = async (req, res) => {
         totalItems = countDocuments;
 
         const orders = await Order.find()
-            .populate({
-                path: 'accountID',
-                select: 'username'
-            })
             .skip((currentPage - 1) * perPage)
             .limit(perPage)
             .sort({ date: -1 });
@@ -53,19 +49,16 @@ exports.getOrderById = async (req, res) => {
 //add order
 exports.addOrder = async (req, res) => {
     try {
-        const { order, user } = req.body;
+        const { order } = req.body;
 
-        const existingUser = await User.findById(user._id);
-        if (!existingUser) {
-            return res.status(400).json({ error: "User not found" });
-        }
         const newOrder = new Order({
-            accountID: existingUser._id,
+            accountID: req.auth._id,
             status: order.status,
             shippingAddress: order.shippingAddress,
             total: order.total,
             deposit: order.deposit,
-            image: order.image
+            image: order.image,
+            date: order.date
         });
 
         const savedOrder = await newOrder.save();
@@ -90,6 +83,7 @@ exports.updateOrder = async (req, res) => {
         existingOrder.total = order.total;
         existingOrder.deposit = order.deposit;
         existingOrder.image = order.image;
+        existingOrder.date = order.date;
 
         const updatedOrder = await existingOrder.save();
 

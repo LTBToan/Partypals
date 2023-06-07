@@ -32,25 +32,18 @@ module.exports = {
                   image: {
                     type: "string",
                   },
-                  accountID: {
-                    type: "string",
-                    format: "objectId",
-                    ref:"Users"
-                  },
                 },
               },
             },
           },
           example: {
             order: {
-              _id: "id",
               status: "Active",
               shippingAddress: "address",
               total: "10000",
               date: "2023-10-13T00:00:00.000Z",
               deposit: "20%",
               image: "image.jpg",
-              accountID: "accountid",
             },
           },
         },

@@ -9,7 +9,7 @@ module.exports = {
   "/product": {
     ...allProducts,
     ...addProduct,
-    ...getProductsByName,
+    // ...getProductsByName,
   },
   "/product/{productID}": {
     ...updateProduct,

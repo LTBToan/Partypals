@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/product', controllersProduct.allProducts);
 router.get('/product', controllersProduct.getProductsByName);
-router.get('/product/:ProductID', controllersProduct.getProductById);
+router.get('/product/:productID', controllersProduct.getProductById);
 router.post('/product',requireSignIn,checkRole(["company"]) , controllersProduct.addProduct);
 router.put('/product/:productID',requireSignIn,checkRole(["company"]) , controllersProduct.updateProduct);
 router.delete('/product/:productID',requireSignIn,checkRole(["company"]) , controllersProduct.deleteProduct);

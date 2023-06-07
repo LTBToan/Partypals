@@ -49,7 +49,6 @@ module.exports = {
           },
           example: {
             order: {
-              _id: "id",
               status: "Active",
               shippingAddress: "address",
               total: "10000",
