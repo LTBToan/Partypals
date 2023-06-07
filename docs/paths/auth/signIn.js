@@ -14,7 +14,7 @@ module.exports = {
               },
               password: {
                 type: "string",
-                example: "dragoncute",
+                example: "Dragoncute!123",
               },
             },
           },
