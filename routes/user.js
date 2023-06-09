@@ -33,6 +33,30 @@ router.delete(
   checkRole(["admin", "user"]),
   controllersUser.deleteCalendar
 );
+router.get(
+  "/notification/:userId",
+  requireSignIn,
+  checkRole(["admin", "user"]),
+  controllersUser.getNotification
+);
+router.post(
+  "/notification/:userId",
+  requireSignIn,
+  checkRole(["admin", "user"]),
+  controllersUser.postNotification
+);
+router.put(
+  "/notification/:notificationId",
+  requireSignIn,
+  checkRole(["admin", "user"]),
+  controllersUser.putNotification
+);
+router.delete(
+  "/notification/:notificationId",
+  requireSignIn,
+  checkRole(["admin", "user"]),
+  controllersUser.deleteNotification
+);
 router.param("userId",controllersUser.userByLogin);
 
 module.exports = router;

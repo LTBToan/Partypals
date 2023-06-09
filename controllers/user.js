@@ -2,6 +2,7 @@ const fs = require("fs");
 const _ = require("lodash");
 const User = require("../models/users");
 const Calendar = require("../models/calendar");
+const Notification = require("../models/notification");
 
 exports.userByLogin = (req, res, next, id) => {
   User.findById(id).exec((err, users) => {
@@ -133,6 +134,51 @@ exports.deleteCalendar = async (req, res) => {
     }
     res.json({
       message: "calendar deleted successfully",
+    });
+  });
+};
+
+exports.getNotification = async (req, res) => {
+  const notification = await Notification.find({ userId: req.profile._id });
+  res.status(200).json(notification);
+};
+
+exports.postNotification = (req, res) => {
+  let notification = new Notification(req.body);
+  notification.userId = req.profile._id;
+  notification.save((err, result) => {
+    if (err) {
+      return res.status(400).json({
+        error: err,
+      });
+    }
+    res.json(result);
+  });
+};
+
+exports.putNotification = async (req, res, next) => {
+  let notification = await Notification.findById(req.params.notificationId);
+  notification = _.extend(notification, req.body);
+  notification.save((err, result) => {
+    if (err) {
+      return res.status(400).json({
+        error: err,
+      });
+    }
+    res.json(notification);
+  });
+};
+
+exports.deleteNotification = async (req, res) => {
+  const notification = await Notification.findById(req.params.notificationId);
+  notification.remove((err, result) => {
+    if (err) {
+      return res.status(400).json({
+        error: err,
+      });
+    }
+    res.json({
+      message: "notification deleted successfully",
     });
   });
 };
