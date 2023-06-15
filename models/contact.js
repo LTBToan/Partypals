@@ -1,20 +1,18 @@
 const mongoose = require("mongoose");
-
+const { ObjectId } = mongoose.Schema;
 const contactSchema = new mongoose.Schema({
-  contactId: {
+  title: {
     type: String,
-    trim: true,
     required: true,
   },
-  email: {
-    type: String,
-    trim: true,
-    required: true,
-  },
+
   description: {
     type: String,
-    trim: true,
     required: true,
+  },
+  userId: {
+    type: ObjectId,
+    ref: "User",
   },
 });
 module.exports = mongoose.model("Contact", contactSchema);

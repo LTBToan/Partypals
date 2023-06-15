@@ -33,30 +33,55 @@ router.delete(
   checkRole(["admin", "user"]),
   controllersUser.deleteCalendar
 );
+
 router.get(
-  "/notification/:userId",
+  "/contact/:userId",
   requireSignIn,
-  checkRole(["admin", "user"]),
-  controllersUser.getNotification
+  checkRole(["admin"]),
+  controllersUser.getContact
 );
 router.post(
-  "/notification/:userId",
-  requireSignIn,
-  checkRole(["admin", "user"]),
-  controllersUser.postNotification
+  "/contact/:userId",
+  controllersUser.postContact
 );
 router.put(
-  "/notification/:notificationId",
+  "/contact/:contactId",
   requireSignIn,
-  checkRole(["admin", "user"]),
-  controllersUser.putNotification
+  checkRole(["admin"]),
+  controllersUser.putContact
 );
 router.delete(
-  "/notification/:notificationId",
+  "/contact/:contactId",
   requireSignIn,
-  checkRole(["admin", "user"]),
-  controllersUser.deleteNotification
+  checkRole(["admin"]),
+  controllersUser.deleteContact
 );
-router.param("userId",controllersUser.userByLogin);
+// router.get(
+//   "/notification/:userId",
+//   requireSignIn,
+//   checkRole(["admin", "user"]),
+//   controllersUser.getNotification
+// );
+// router.post(
+//   "/notification/:userId",
+//   requireSignIn,
+//   checkRole(["admin", "user"]),
+//   controllersUser.postNotification
+// );
+// router.put(
+//   "/notification/:notificationId",
+//   requireSignIn,
+//   checkRole(["admin", "user"]),
+//   controllersUser.putNotification
+// );
+// router.delete(
+//   "/notification/:notificationId",
+//   requireSignIn,
+//   checkRole(["admin", "user"]),
+//   controllersUser.deleteNotification
+// );
+// router.param("userId",controllersUser.userByLogin);
+
+
 
 module.exports = router;
