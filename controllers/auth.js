@@ -14,10 +14,15 @@ const CLIENT_ID = "fac8f66eb69598dd2c8b";
 const CLIENT_SECRET = "d9db2ad94b6bd486ef3330810d9d3cc4e6edd8ad";
 
 exports.signUp = async (req, res) => {
-  const userExists = await User.findOne({ email: req.body.email });
+  const userExists = await User.findOne({ email: req.body.userName });
+  const emailExists = await User.findOne({ email: req.body.email });
   if (userExists)
     return res.status(403).json({
       message: "Email is taken!",
+    });
+  if (emailExists)
+    return res.status(403).json({
+      message: "UserName is taken!",
     });
   const user = await new User(req.body);
   await user.save();
@@ -63,8 +68,8 @@ exports.verifyEmail = (req, res) => {
 
 
 exports.signIn = (req, res) => {
-  const { email, password } = req.body;
-  User.findOne({ email }, (err, user) => {
+  const { userName, password } = req.body;
+  User.findOne({ userName }, (err, user) => {
     if (err || !user) {
       return res.status(401).json({
         message: "User with that email does not exist. Please signup.",

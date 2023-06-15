@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     trim: true,
-    required: true,
+    default: null,
   },
   email: {
     type: String,
@@ -22,6 +22,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     trim: true,
     default: null,
+  },
+  userName:{
+    type: String,
+    trim: true,
+    required: true,
   },
   hashed_password: {
     type: String,

@@ -8,9 +8,9 @@ module.exports = {
           schema: {
             type: "object",
             properties: {
-              email: {
+              userName: {
                 type: "string",
-                example: "dragoncute@gmail.com",
+                example: "dragoncute123",
               },
               password: {
                 type: "string",
