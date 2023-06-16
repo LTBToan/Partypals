@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
     trim: true,
     default: null,
   },
-  userName:{
+  username:{
     type: String,
     trim: true,
     required: true,

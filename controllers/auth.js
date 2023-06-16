@@ -14,7 +14,7 @@ const CLIENT_ID = "fac8f66eb69598dd2c8b";
 const CLIENT_SECRET = "d9db2ad94b6bd486ef3330810d9d3cc4e6edd8ad";
 
 exports.signUp = async (req, res) => {
-  const userExists = await User.findOne({ email: req.body.userName });
+  const userExists = await User.findOne({ email: req.body.username });
   const emailExists = await User.findOne({ email: req.body.email });
   if (userExists)
     return res.status(403).json({
@@ -68,16 +68,16 @@ exports.verifyEmail = (req, res) => {
 
 
 exports.signIn = (req, res) => {
-  const { userName, password } = req.body;
-  User.findOne({ userName }, (err, user) => {
+  const { username, password } = req.body;
+  User.findOne({ username }, (err, user) => {
     if (err || !user) {
       return res.status(401).json({
-        message: "User with that email does not exist. Please signup.",
+        message: "User with that username does not exist. Please signup.",
       });
     }
     if (!user.authenticate(password)) {
       return res.status(401).json({
-        message: "Email and password do not match",
+        message: "Username and password do not match",
       });
     }
     if (user.status === 'inactive'){
