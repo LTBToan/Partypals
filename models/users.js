@@ -42,6 +42,11 @@ const userSchema = new mongoose.Schema({
     trim: true,
     default: null,
   },
+  tax:{
+    type: String,
+    trim: true,
+    default: null,
+  },
   calendar: [
     {
       dateTime: String,
