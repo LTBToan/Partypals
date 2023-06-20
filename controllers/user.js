@@ -27,7 +27,7 @@ exports.allUsers = (req, res) => {
       totalItems = count;
       return User.find({ name: { $regex: name, $options: "i" } })
         .skip((currentPage - 1) * perPage) 
-        .select("accountID name")
+        .select("image name phone role address status tax")
         .limit(perPage)
         .sort({ created: -1 });
     })

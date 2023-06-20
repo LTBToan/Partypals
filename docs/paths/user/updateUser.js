@@ -39,6 +39,10 @@ module.exports = {
                   type:"string",
                   example:"Hình ảnh"
                 },
+                tax:{
+                  type:"string",
+                  example:"Mã số thuế"
+                },
                 status:{
                   type:"string",
                   example:"active or inactive"

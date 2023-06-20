@@ -90,8 +90,8 @@ exports.signIn = (req, res) => {
       process.env.JWT_SECRET
     );
     res.cookie("t", token, { expire: new Date() + 9999 });
-    const { _id, image, name, email, role } = user;
-    return res.json({ token, user: { _id, image, email, name, role } });
+    const { _id, image, name, email, role ,tax} = user;
+    return res.json({ token, user: { _id, image, email, name, role, tax } });
   });
 };
 
