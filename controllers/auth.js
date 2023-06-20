@@ -38,7 +38,7 @@ exports.signUp = async (req, res) => {
         message: "Username is taken!",
       });
     }
-
+    
     const user = new User(req.body);
     await user.save();
     res.status(200).json({ message: "Signup success! Please login." });
