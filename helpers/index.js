@@ -1,4 +1,6 @@
 const nodeMailer = require("nodemailer");
+const emailVerify = require('email-verify');
+
 exports.sendEmail = (emailData) => {
   const transporter = nodeMailer.createTransport({
     host: "smtp.gmail.com",
@@ -26,4 +28,16 @@ exports.generateRandomPassword = (length) => {
   }
 
   return password;
+};
+
+exports.checkEmail = (emailData) => {
+  return new Promise((resolve, reject) => {
+    emailVerify.verify(emailData, (err, info) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(info.success);
+      }
+    });
+  });
 };

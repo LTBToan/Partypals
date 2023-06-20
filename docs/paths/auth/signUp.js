@@ -8,6 +8,10 @@ module.exports = {
           schema: {
             type: "object",
             properties: {
+              name: {
+                type: "string",
+                example: "TrinhBinhMinh",
+              },
               username: {
                 type: "string",
                 example: "dragoncute",
