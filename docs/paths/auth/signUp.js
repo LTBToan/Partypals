@@ -10,6 +10,10 @@ module.exports = {
             properties: {
               name: {
                 type: "string",
+                example: "TrinhBinhMinh",
+              },
+              username: {
+                type: "string",
                 example: "dragoncute",
               },
               email: {

@@ -1,6 +1,18 @@
 module.exports = {
-  post: {
-    tags: ["Auth"],
+  put: {
+    tags: ["Product"],
+    summary: "update information of Status product",
+    parameters: [
+      {
+        in: "path",
+        name: "productID",
+        description: "productID",
+        schema: {
+          type: "String",
+          format: "objectId",
+        },
+      },
+    ],
     requestBody: {
       required: true,
       content: {
@@ -8,13 +20,9 @@ module.exports = {
           schema: {
             type: "object",
             properties: {
-              username: {
+              status: {
                 type: "string",
-                example: "dragoncute123",
-              },
-              password: {
-                type: "string",
-                example: "Dragoncute!123",
+                example: "Done",
               },
             },
           },

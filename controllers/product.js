@@ -165,3 +165,20 @@ exports.deleteProduct = async (req, res) => {
     res.status(500).json({ error: "Failed to delete product", errorMessage: error.message });
   }
 };
+
+exports.updateStatus = async (req, res) => {
+  try {
+    const existingProduct = await Product.findById(req.params.productID);
+    if (!existingProduct) {
+      return res.status(400).json({ error: "Invalid product ID" });
+    }
+    if (req.body.status !== "Cancel" && req.body.status !== "Pending" && req.body.status !== "No deposit yet" && req.body.status !== "Done") {
+      return res.status(400).json({ error: "status not found" });
+    }
+    existingProduct.status = req.body.status;
+    const updatedProduct = await existingProduct.save();
+    res.status(200).json({ message: "Status Product updated successfully", product: updatedProduct });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update Status product", errorMessage: error.message });
+  }
+};

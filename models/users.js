@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     trim: true,
-    required: true,
+    default: null,
   },
   email: {
     type: String,
@@ -23,6 +23,11 @@ const userSchema = new mongoose.Schema({
     trim: true,
     default: null,
   },
+  username:{
+    type: String,
+    trim: true,
+    required: true,
+  },
   hashed_password: {
     type: String,
     required: true,
@@ -33,6 +38,11 @@ const userSchema = new mongoose.Schema({
     default: "active",
   },
   image: {
+    type: String,
+    trim: true,
+    default: null,
+  },
+  tax:{
     type: String,
     trim: true,
     default: null,

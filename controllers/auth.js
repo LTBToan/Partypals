@@ -6,6 +6,7 @@ const crypto = require('crypto');
 const _ = require("lodash");
 const { OAuth2Client } = require("google-auth-library");
 const { sendEmail } = require("../helpers");
+const { checkEmail } = require("../helpers");
 const { generateRandomPassword } = require("../helpers");
 const axios = require("axios");
 dotenv.config();
@@ -14,14 +15,39 @@ const CLIENT_ID = "fac8f66eb69598dd2c8b";
 const CLIENT_SECRET = "d9db2ad94b6bd486ef3330810d9d3cc4e6edd8ad";
 
 exports.signUp = async (req, res) => {
-  const userExists = await User.findOne({ email: req.body.email });
-  if (userExists)
-    return res.status(403).json({
-      message: "Email is taken!",
+  try {
+    const userExists = await User.findOne({ username: req.body.username });
+    const emailExists = await User.findOne({ email: req.body.email });
+    // const emailValid = await checkEmail(req.body.email);
+
+
+    // if (!emailValid) {
+    //   return res.status(403).json({
+    //     message: "Email does not exist!",
+    //   });
+    // }
+
+    if (emailExists) {
+      return res.status(403).json({
+        message: "Email is taken!",
+      });
+    }
+
+    if (userExists) {
+      return res.status(403).json({
+        message: "Username is taken!",
+      });
+    }
+
+    const user = new User(req.body);
+    await user.save();
+    res.status(200).json({ message: "Signup success! Please login." });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Internal server error",
     });
-  const user = await new User(req.body);
-  await user.save();
-  res.status(200).json({ message: "Signup success! Please login." });
+  }
 };
 
 exports.verifyEmail = (req, res) => {
@@ -63,19 +89,19 @@ exports.verifyEmail = (req, res) => {
 
 
 exports.signIn = (req, res) => {
-  const { email, password } = req.body;
-  User.findOne({ email }, (err, user) => {
+  const { username, password } = req.body;
+  User.findOne({ username }, (err, user) => {
     if (err || !user) {
       return res.status(401).json({
-        message: "User with that email does not exist. Please signup.",
+        message: "User with that username does not exist. Please signup.",
       });
     }
     if (!user.authenticate(password)) {
       return res.status(401).json({
-        message: "Email and password do not match",
+        message: "Username and password do not match",
       });
     }
-    if (user.status === 'inactive'){
+    if (user.status === 'inactive') {
       return res.status(401).json({
         message: "Your account is inactive",
       });
@@ -85,8 +111,8 @@ exports.signIn = (req, res) => {
       process.env.JWT_SECRET
     );
     res.cookie("t", token, { expire: new Date() + 9999 });
-    const { _id, image, name, email, role } = user;
-    return res.json({ token, user: { _id, image, email, name, role } });
+    const { _id, image, name, email, role, tax } = user;
+    return res.json({ token, user: { _id, image, email, name, role, tax } });
   });
 };
 
