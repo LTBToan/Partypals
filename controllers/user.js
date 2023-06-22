@@ -71,8 +71,7 @@ exports.updateUser = (req, res, next) => {
     }
     user.hashed_password = undefined;
     user.salt = undefined;
-    const { _id, name, email, role } = user;
-    res.json({ _id, email, name, role });
+    res.json(user);
   });
 };
 
