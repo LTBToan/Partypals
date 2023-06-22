@@ -47,10 +47,14 @@ module.exports = {
                   type:"string",
                   example:"active or inactive"
                 },
-                role:{
-                  type:"string",
-                  example:"user,admin,company"
-                }
+                role: {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                    enum: ['user', 'admin', 'company'],
+                  },
+                  default: ['user'],
+                },
               },
             },
           },
