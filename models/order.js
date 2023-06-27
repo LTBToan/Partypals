@@ -4,12 +4,7 @@ const { ObjectId } = mongoose.Schema;
 const orderSchema = new mongoose.Schema({
   accountID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-  status: {
-    type: String,
-    trim: true,
+    ref: "Users",
     required: true,
   },
   shippingAddress: {
@@ -17,21 +12,17 @@ const orderSchema = new mongoose.Schema({
     trim: true,
     required: true,
   },
-  total: {
+  fullName: {
     type: String,
     trim: true,
     required: true,
   },
-  date: {
-    type: Date,
-    default: Date.now,
-  },
-  deposit: {
+  phone: {
     type: String,
     trim: true,
     required: true,
   },
-  image: {
+  note: {
     type: String,
     trim: true,
     required: true,

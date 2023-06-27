@@ -1,20 +1,16 @@
 const mongoose = require("mongoose");
 
 const invoiceSchema = new mongoose.Schema({
-  invoiceID: {
-    type: String,
+  orderDetailID: {
+    type: mongoose.Schema.Types.ObjectId,
     trim: true,
-    required: true,
-  },
-  orderID: {
-    type: String,
-    trim: true,
+    ref:"OrderDetail",
     required: true,
   },
   paymentID: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Payment",
     trim: true,
-    required: true,
   },
 });
 module.exports = mongoose.model("Invoice", invoiceSchema);

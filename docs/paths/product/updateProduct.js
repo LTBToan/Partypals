@@ -38,12 +38,35 @@ module.exports = {
                   description: {
                     type: "string",
                   },
+                  fullDescription: {
+                    type: "string",
+                  },
                   price: {
                     type: "string",
                   },
-                  accountID: {
+                  discount: {
                     type: "string",
-                    format: "objectId",
+                  },
+                  offerEnd: {
+                    type: "string",
+                  },
+                  new: {
+                    type: "boolean",
+                  },
+                  rating: {
+                    type: "string",
+                  },
+                  variation: {
+                    type: "object",
+                    properties: {
+                      image: {
+                        type: "string",
+                      },
+                      color: {
+                        type: "string",
+                      },
+                    },
+                    required: ["image", "color"], 
                   },
                 },
               },
@@ -54,9 +77,6 @@ module.exports = {
                     type: "string",
                     format: "objectId",
                   },
-                  categoryName: {
-                    type: "string",
-                  },
                 },
               },
             },
@@ -65,15 +85,23 @@ module.exports = {
             product: {
               productName: "New Product",
               status: "Active",
-              quantity: 10,
+              quantity: "10",
               image: "product-image.jpg",
               description: "Product description",
-              price: 99.99,
-              accountID: "id"
+              fullDescription: "Full product description",
+              price: "99.99",
+              discount: "10%",
+              offerEnd: "2023-06-30",
+              new: true,
+              rating: "4.5",
+              variation: {
+                image: "variation-image.jpg",
+                color: "red",
+              },
+              accountID: "accountid",
             },
             category: {
-              _id: "category-id",
-              categoryName:"catename"
+              _id: "categoryid",
             },
           },
         },

@@ -53,12 +53,10 @@ exports.addOrder = async (req, res) => {
 
         const newOrder = new Order({
             accountID: req.auth._id,
-            status: order.status,
             shippingAddress: order.shippingAddress,
-            total: order.total,
-            deposit: order.deposit,
-            image: order.image,
-            date: order.date
+            fullName: order.fullName,
+            phone: order.phone,
+            note: order.note,
         });
 
         const savedOrder = await newOrder.save();
@@ -78,12 +76,14 @@ exports.updateOrder = async (req, res) => {
             return res.status(400).json({ error: "Invalid order ID" });
         }
 
-        existingOrder.status = order.status;
+        if (existingOrder.accountID != req.auth._id) {
+            return res.status(400).json({ error: "Invalid user ID" });
+        }
+        
         existingOrder.shippingAddress = order.shippingAddress;
-        existingOrder.total = order.total;
-        existingOrder.deposit = order.deposit;
-        existingOrder.image = order.image;
-        existingOrder.date = order.date;
+        existingOrder.fullName = order.fullName;
+        existingOrder.phone = order.phone;
+        existingOrder.note = order.note;
 
         const updatedOrder = await existingOrder.save();
 
@@ -96,10 +96,14 @@ exports.updateOrder = async (req, res) => {
 //delete order
 exports.deleteOrder = async (req, res) => {
     try {
+        const { order } = req.body;
 
         const existingOrder = await Order.findById(req.params.orderID);
         if (!existingOrder) {
             return res.status(400).json({ error: "Invalid order ID" });
+        }
+        if (existingOrder.accountID != req.auth._id) {
+            return res.status(400).json({ error: "Invalid user ID" });
         }
 
         await existingOrder.remove();
