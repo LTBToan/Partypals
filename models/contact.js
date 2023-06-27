@@ -18,6 +18,10 @@ const contactSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  status: {
+    type: String,
+    default: 'active',
+  },
   userId: {
     type: ObjectId,
     ref: "User",

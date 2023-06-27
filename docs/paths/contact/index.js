@@ -1,9 +1,10 @@
-const getContact = require("./getContact");
+const getAllContact = require("./getAllContact");
+const postContactByAdmin = require("./postContactByAdmin");
 const postContact = require("./postContact");
 const deleteContact = require("./deleteContact");
 module.exports = {
-  "/contact/{userId}": {
-    ...getContact,
+  "/contact": {
+    ...getAllContact,
     ...postContact,
   },
   "/contact/{contactId}": {

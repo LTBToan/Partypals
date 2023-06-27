@@ -35,52 +35,29 @@ router.delete(
 );
 
 router.get(
-  "/contact/:userId",
+  "/contact",
   requireSignIn,
   checkRole(["admin"]),
-  controllersUser.getContact
+  controllersUser.getAllContact
 );
 router.post(
-  "/contact/:userId",
+  "/contact",
   controllersUser.postContact
 );
-router.put(
-  "/contact/:contactId",
-  requireSignIn,
-  checkRole(["admin"]),
-  controllersUser.putContact
-);
-router.delete(
-  "/contact/:contactId",
-  requireSignIn,
-  checkRole(["admin"]),
-  controllersUser.deleteContact
-);
-// router.get(
-//   "/notification/:userId",
-//   requireSignIn,
-//   checkRole(["admin", "user"]),
-//   controllersUser.getNotification
-// );
-// router.post(
-//   "/notification/:userId",
-//   requireSignIn,
-//   checkRole(["admin", "user"]),
-//   controllersUser.postNotification
-// );
 // router.put(
-//   "/notification/:notificationId",
+//   "/contact/:contactId",
 //   requireSignIn,
-//   checkRole(["admin", "user"]),
-//   controllersUser.putNotification
+//   checkRole(["admin"]),
+//   controllersUser.putContact
 // );
 // router.delete(
-//   "/notification/:notificationId",
+//   "/contact/:contactId",
 //   requireSignIn,
-//   checkRole(["admin", "user"]),
-//   controllersUser.deleteNotification
+//   checkRole(["admin"]),
+//   controllersUser.deleteContact
 // );
-// router.param("userId",controllersUser.userByLogin);
+
+router.param("userId",controllersUser.userByLogin);
 
 
 

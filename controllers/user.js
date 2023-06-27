@@ -138,14 +138,40 @@ exports.deleteCalendar = async (req, res) => {
   });
 };
 
-exports.getContact = async (req, res) => {
+exports.getContactByAdmin = async (req, res) => {
   const contact = await Contact.find({ userId: req.profile._id });
   res.status(200).json(contact);
 };
 
+exports.getAllContact = async (req, res) => {
+  const currentPage = parseInt(req.query.page) || 1;
+  const perPage = parseInt(req.query.perPage) || 10;
+  const name = req.query.name || "";
+  let totalItems;
+  const Contacts = Contact.find()
+    .countDocuments()
+    .then((count) => {
+      totalItems = count;
+      return Contact.find({ name: { $regex: name, $options: "i" } })
+        .skip((currentPage - 1) * perPage) 
+        .select(" name email title description status")
+        .limit(perPage)
+        .sort({ created: -1 });
+    })
+    .then((contacts) => {
+      res.status(200).json({
+        totalPage: Math.ceil(totalItems / perPage),
+        totalItems,
+        perPage,
+        currentPage,
+        list: contacts,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+
 exports.postContact = (req, res) => {
   let contact = new Contact(req.body);
-  contact.userId = req.profile._id;
   contact.save((err, result) => {
     if (err) {
       return res.status(400).json({
@@ -155,6 +181,19 @@ exports.postContact = (req, res) => {
     res.json(result);
   });
 };
+
+// exports.postContactByAdmin = (req, res) => {
+//   let contact = new Contact(req.body);
+//   contact.userId = req.profile._id;
+//   contact.save((err, result) => {
+//     if (err) {
+//       return res.status(400).json({
+//         error: err,
+//       });
+//     }
+//     res.json(result);
+//   });
+// };
 
 exports.putContact = async (req, res, next) => {
   let contact = await Contact.findById(req.params.contactId);

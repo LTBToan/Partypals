@@ -1,44 +1,39 @@
 module.exports = {
     post: {
-      tags: ["Contact"],
-      summary: "Post Contact",
-      parameters: [
-        {
-          in: "path",
-          name: "userId",
-          security: [{ BearerAuth: [] }],
-          description: "User ID",
-          schema: {
-            type: "string",
-            format: "ObjectId",
-          },
-        },
-      ],
-      requestBody: {
-        required: true,
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                title: {
-                  type: "string",
-                  example: "title",
+        tags: ["Contact"],
+        summary: "Post Contact",
+        requestBody: {
+            required: true,
+            content: {
+                "application/json": {
+                    schema: {
+                        type: "object",
+                        properties: {
+                            name: {
+                                type: "string",
+                                example: "LyQuocLam",
+                            },
+                            email: {
+                                type: "string",
+                                example: "abc@gmail.com",
+                            },
+                            title: {
+                                type: "string",
+                                example: "title",
+                            },
+                            description: {
+                                type: "string",
+                                example: "description",
+                            },
+                        },
+                    },
                 },
-                description: {
-                  type: "string",
-                  example: "description",
-                },
-              },
             },
-          },
         },
-      },
-      responses: {
-        200: {
-          description: "Success",
+        responses: {
+            200: {
+                description: "Success",
+            },
         },
-      },
     },
-  };
-  
+};
