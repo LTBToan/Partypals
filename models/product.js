@@ -37,10 +37,45 @@ const productSchema = new mongoose.Schema({
     trim: true,
     required: true,
   },
+  fullDescription: {
+    type: String,
+    trim: true,
+    required: true,
+  },
   price: {
     type: String,
     trim: true,
     required: true,
-  }
+  },
+  discount: {
+    type: String,
+    trim: true,
+  },
+  offerEnd: {
+    type: String,
+    trim: true,
+  },
+  new: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
+  rating: {
+    type: String,
+    trim: true,
+    required: true,
+  },
+  variation: {
+    image: {
+      type: String,
+      trim: true,
+      required: true,
+    },
+    color: {
+      type: String,
+      trim: true,
+      required: true,
+    }
+  },
 });
 module.exports = mongoose.model("Product", productSchema);

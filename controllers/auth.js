@@ -139,8 +139,8 @@ exports.requireSignIn = expressJwt({
 
 exports.checkRole = (roles) => (req, res, next) => {
   const { roleId } = req.auth;
-  console.log(roleId);
-  if (!roles.includes(roleId)) {
+  const result = roles.some( role => roleId.includes(role));
+  if (!result) {
     return res.status(403).json({ message: "Unauthorized" });
   }
   next();

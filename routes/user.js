@@ -12,51 +12,52 @@ router.delete("/user/:userId",requireSignIn,checkRole(["admin"]) ,controllersUse
 router.get(
   "/calendar/:userId",
   requireSignIn,
-  checkRole(["admin", "user"]),
+  checkRole(["user"]),
   controllersUser.getCalendar
 );
 router.post(
   "/calendar/:userId",
   requireSignIn,
-  checkRole(["admin", "user"]),
+  checkRole(["user"]),
   controllersUser.postCalendar
 );
 router.put(
   "/calendar/:calendarId",
   requireSignIn,
-  checkRole(["admin", "user"]),
+  checkRole(["user"]),
   controllersUser.putCalendar
 );
 router.delete(
   "/calendar/:calendarId",
   requireSignIn,
-  checkRole(["admin", "user"]),
+  checkRole(["user"]),
   controllersUser.deleteCalendar
 );
 
 router.get(
   "/contact",
   requireSignIn,
-  checkRole(["admin"]),
-  controllersUser.getAllContact
+  checkRole(["admin", "user"]),
+  controllersUser.getNotification
 );
 router.post(
-  "/contact",
-  controllersUser.postContact
+  "/notification/:userId",
+  requireSignIn,
+  checkRole(["admin", "user"]),
+  controllersUser.postNotification
 );
-// router.put(
-//   "/contact/:contactId",
-//   requireSignIn,
-//   checkRole(["admin"]),
-//   controllersUser.putContact
-// );
-// router.delete(
-//   "/contact/:contactId",
-//   requireSignIn,
-//   checkRole(["admin"]),
-//   controllersUser.deleteContact
-// );
-
+router.put(
+  "/notification/:notificationId",
+  requireSignIn,
+  checkRole(["admin", "user"]),
+  controllersUser.putNotification
+);
+router.delete(
+  "/notification/:notificationId",
+  requireSignIn,
+  checkRole(["admin", "user"]),
+  controllersUser.deleteNotification
+);
 router.param("userId",controllersUser.userByLogin);
 
 

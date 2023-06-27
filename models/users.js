@@ -69,8 +69,8 @@ const userSchema = new mongoose.Schema({
   },
   updateDate: Date,
   role: {
-    type: String,
-    default: "user",
+    type: [String],
+    default: ["user"],
   },
 });
 userSchema
