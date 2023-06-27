@@ -6,7 +6,8 @@ const notification = require("./notification");
 const order = require("./order");
 const category= require("./category");
 const product = require("./product");
-
+const invoice = require("./invoice");
+const orderDetail = require("./orderDetail");
 
 module.exports = {
   paths: {
@@ -18,5 +19,7 @@ module.exports = {
     ...product,
     ...order,
     ...category,
+    ...invoice,
+    ...orderDetail,
   },
 };

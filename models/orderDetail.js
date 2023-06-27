@@ -2,18 +2,46 @@ const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema;
 
 const orderDetailSchema = new mongoose.Schema({
-  orderDetailID: {
+  orderID: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Order",
+  },
+  productID: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Product",
+  },
+  deposit: {
     type: String,
     trim: true,
     required: true,
   },
-  orderID: {
-    type: ObjectId,
-    ref: "Order",
+  shipPrice: {
+    type: Number,
+    trim: true,
+    required: true,
   },
-  productID: {
-    type: ObjectId,
-    ref: "Product",
+  quantity: {
+    type: Number,
+    trim: true,
+    required: true,
+  },
+  total: {
+    type: Number,
+    trim: true,
+    required: true,
+  },
+  unitPrice: {
+    type: Number,
+    required: true,
+  },
+  date: {
+    type: Date,
+    default: Date.now,
+  },
+  status: {
+    type: String,
+    trim: true,
+    required: true,
   },
 });
 module.exports = mongoose.model("OrderDetail", orderDetailSchema);

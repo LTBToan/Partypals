@@ -98,7 +98,16 @@ exports.addProduct = async (req, res) => {
       quantity: product.quantity,
       image: product.image,
       description: product.description,
-      price: product.price
+      fullDescription: product.fullDescription,
+      price: product.price,
+      discount: product.discount,
+      offerEnd: product.offerEnd,
+      new: product.new,
+      rating: product.rating,
+      variation: {
+        image: product.variation.image,
+        color: product.variation.color
+      }
     });
 
     const savedProduct = await newProduct.save();
@@ -127,13 +136,21 @@ exports.updateProduct = async (req, res) => {
       return res.status(400).json({ error: "Invalid category ID" });
     }
 
+    existingProduct.categoryID = existingCategory._id;
     existingProduct.productName = product.productName;
     existingProduct.status = product.status;
     existingProduct.quantity = product.quantity;
     existingProduct.image = product.image;
     existingProduct.description = product.description;
+    existingProduct.fullDescription = product.fullDescription;
     existingProduct.price = product.price;
-    existingProduct.categoryID = category._id;
+    existingProduct.discount = product.discount;
+    existingProduct.offerEnd = product.offerEnd;
+    existingProduct.new = product.new;
+    existingProduct.rating = product.rating;
+    existingProduct.variation.image = product.variation.image;
+    existingProduct.variation.color = product.variation.color;
+    
 
     const updatedProduct = await existingProduct.save();
 
