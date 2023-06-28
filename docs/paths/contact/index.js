@@ -1,6 +1,6 @@
 const getAllContact = require("./getAllContact");
-const postContactByAdmin = require("./postContactByAdmin");
 const postContact = require("./postContact");
+const putContact = require("./putContact");
 const deleteContact = require("./deleteContact");
 module.exports = {
   "/contact": {
@@ -8,6 +8,7 @@ module.exports = {
     ...postContact,
   },
   "/contact/{contactId}": {
+    ...putContact,
     ...deleteContact,
   },
 };

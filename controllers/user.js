@@ -3,6 +3,7 @@ const _ = require("lodash");
 const User = require("../models/users");
 const Calendar = require("../models/calendar");
 const Contact =  require("../models/contact");
+const { sendEmail } = require("../helpers");
 
 exports.userByLogin = (req, res, next, id) => {
   User.findById(id).exec((err, users) => {
@@ -182,20 +183,27 @@ exports.postContact = (req, res) => {
 };
 
 // exports.postContactByAdmin = (req, res) => {
-//   let contact = new Contact(req.body);
-//   contact.userId = req.profile._id;
-//   contact.save((err, result) => {
-//     if (err) {
-//       return res.status(400).json({
-//         error: err,
+//   const {email,subject,description} = req.body;
+//   Contact.findOne({ email: email}, (err, contact) => {
+//     if (err || !contact) {
+//       return res.status(401).json({
+//         message: "No contact found",
 //       });
 //     }
-//     res.json(result);
 //   });
 // };
 
 exports.putContact = async (req, res, next) => {
   let contact = await Contact.findById(req.params.contactId);
+  console.log(contact.email);
+  const {subject,description} = req.body;
+  const emailData = {
+    from: "partypal@gmail.com",
+    to: contact.email,
+    subject: subject,
+    html: `<p>Hi, ${contact.email}</p><p>${description}</p>`,
+  };
+  contact.userId = req.auth._id; 
   contact = _.extend(contact, req.body);
   contact.save((err, result) => {
     if (err) {
@@ -203,13 +211,15 @@ exports.putContact = async (req, res, next) => {
         error: err,
       });
     }
+    sendEmail(emailData);
     res.json(contact);
   });
 };
 
 exports.deleteContact = async (req, res) => {
   const contact = await Contact.findById(req.params.contactId);
-  contact.remove((err, contact) => {
+  contact.status = "inactive";
+  contact.save((err, contact) => {
     if (err) {
       return res.status(400).json({
         error: err,
@@ -217,6 +227,51 @@ exports.deleteContact = async (req, res) => {
     }
     res.json({
       message: "contact deleted successfully",
+    });
+  });
+};
+
+exports.getNotification = async (req, res) => {
+  const notification = await Notification.find({ userId: req.profile._id });
+  res.status(200).json(notification);
+};
+
+exports.postNotification = (req, res) => {
+  let notification = new Notification(req.body);
+  notification.userId = req.profile._id;
+  notification.save((err, result) => {
+    if (err) {
+      return res.status(400).json({
+        error: err,
+      });
+    }
+    res.json(result);
+  });
+};
+
+exports.putNotification = async (req, res, next) => {
+  let notification = await Notification.findById(req.params.notificationId);
+  notification = _.extend(notification, req.body);
+  notification.save((err, result) => {
+    if (err) {
+      return res.status(400).json({
+        error: err,
+      });
+    }
+    res.json(notification);
+  });
+};
+
+exports.deleteNotification = async (req, res) => {
+  const notification = await Notification.findById(req.params.notificationId);
+  notification.remove((err, result) => {
+    if (err) {
+      return res.status(400).json({
+        error: err,
+      });
+    }
+    res.json({
+      message: "notification deleted successfully",
     });
   });
 };

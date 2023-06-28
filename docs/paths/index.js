@@ -6,6 +6,7 @@ const notification = require("./notification");
 const order = require("./order");
 const category= require("./category");
 const product = require("./product");
+const contact = require("./contact");
 
 
 module.exports = {
@@ -18,5 +19,6 @@ module.exports = {
     ...product,
     ...order,
     ...category,
+    ...contact,
   },
 };

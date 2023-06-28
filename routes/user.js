@@ -9,6 +9,7 @@ router.get("/user/:userId", requireSignIn,checkRole(["admin"]),controllersUser.g
 router.post("/user/create", requireSignIn,checkRole(["admin"]),controllersUser.createUser);
 router.put("/user/:userId",controllersUser.updateUser);
 router.delete("/user/:userId",requireSignIn,checkRole(["admin"]) ,controllersUser.deleteUser);
+
 router.get(
   "/calendar/:userId",
   requireSignIn,
@@ -35,7 +36,7 @@ router.delete(
 );
 
 router.get(
-  "/contact",
+  "/notification",
   requireSignIn,
   checkRole(["admin", "user"]),
   controllersUser.getNotification
@@ -60,6 +61,22 @@ router.delete(
 );
 router.param("userId",controllersUser.userByLogin);
 
+router.get(
+  "/contact",
+  requireSignIn,
+  checkRole(["admin"]),
+  controllersUser.getAllContact
+);
+router.post("/contact",controllersUser.postContact);
+
+router.put(
+  "/contact/:contactId",
+  requireSignIn,
+  checkRole(["admin"]),
+  controllersUser.putContact
+);
+
+router.delete("/contact/:contactId",requireSignIn,checkRole(["admin"]),controllersUser.deleteContact);
 
 
 module.exports = router;
