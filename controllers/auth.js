@@ -38,7 +38,7 @@ exports.signUp = async (req, res) => {
         message: "Username is taken!",
       });
     }
-    
+
     const user = new User(req.body);
     await user.save();
     res.status(200).json({ message: "Signup success! Please login." });
@@ -55,8 +55,8 @@ exports.verifyEmail = (req, res) => {
   if (!req.body.email)
     return res.status(400).json({ message: "No Email in request body" });
   const { email } = req.body;
+  console.log(email);
   const code = generateRandomPassword(8);
-  console.log(code);
   User.findOne({ email }, (err, user) => {
     if (err || !user) {
       return res.status(401).json({
@@ -64,7 +64,7 @@ exports.verifyEmail = (req, res) => {
       });
     }
     const emailData = {
-      from: "noreply@dragon-cute.com",
+      from: "partypal@gmail.com",
       to: email,
       subject: "Password Reset Instructions",
       html: `<p>hi, ${email}</p><p>code: ${code}</p>`,
@@ -72,17 +72,19 @@ exports.verifyEmail = (req, res) => {
     user.password = code;
     user.updated = Date.now();
     user.save((err, result) => {
-      if (err) {
-        return res.status(400).json({
+      if (err || !user) {
+        return res.status(401).json({
           error: err,
         });
       }
       user.hashed_password = undefined;
       user.salt = undefined;
-    });
-    sendEmail(emailData);
-    res.status(200).json({
-      message: `Email has been sent to ${email}. Follow the instructions to reset your password.`,
+
+      sendEmail(emailData);
+      res.status(200).json({
+        message: `Email has been sent to ${email}. Follow the instructions to reset your password.`,
+      });
+
     });
   });
 };

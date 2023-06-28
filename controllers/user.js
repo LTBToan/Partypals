@@ -2,7 +2,8 @@ const fs = require("fs");
 const _ = require("lodash");
 const User = require("../models/users");
 const Calendar = require("../models/calendar");
-const Notification = require("../models/notification");
+const Contact =  require("../models/contact");
+const { sendEmail } = require("../helpers");
 
 exports.userByLogin = (req, res, next, id) => {
   User.findById(id).exec((err, users) => {
@@ -133,6 +134,99 @@ exports.deleteCalendar = async (req, res) => {
     }
     res.json({
       message: "calendar deleted successfully",
+    });
+  });
+};
+
+exports.getContactByAdmin = async (req, res) => {
+  const contact = await Contact.find({ userId: req.profile._id });
+  res.status(200).json(contact);
+};
+
+exports.getAllContact = async (req, res) => {
+  const currentPage = parseInt(req.query.page) || 1;
+  const perPage = parseInt(req.query.perPage) || 10;
+  const name = req.query.name || "";
+  let totalItems;
+  const Contacts = Contact.find()
+    .countDocuments()
+    .then((count) => {
+      totalItems = count;
+      return Contact.find({ name: { $regex: name, $options: "i" } })
+        .skip((currentPage - 1) * perPage) 
+        .select(" name email title description status")
+        .limit(perPage)
+        .sort({ created: -1 });
+    })
+    .then((contacts) => {
+      res.status(200).json({
+        totalPage: Math.ceil(totalItems / perPage),
+        totalItems,
+        perPage,
+        currentPage,
+        list: contacts,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+
+exports.postContact = (req, res) => {
+  let contact = new Contact(req.body);
+  contact.save((err, result) => {
+    if (err) {
+      return res.status(400).json({
+        error: err,
+      });
+    }
+    res.json(result);
+  });
+};
+
+// exports.postContactByAdmin = (req, res) => {
+//   const {email,subject,description} = req.body;
+//   Contact.findOne({ email: email}, (err, contact) => {
+//     if (err || !contact) {
+//       return res.status(401).json({
+//         message: "No contact found",
+//       });
+//     }
+//   });
+// };
+
+exports.putContact = async (req, res, next) => {
+  let contact = await Contact.findById(req.params.contactId);
+  console.log(contact.email);
+  const {subject,description} = req.body;
+  const emailData = {
+    from: "partypal@gmail.com",
+    to: contact.email,
+    subject: subject,
+    html: `<p>Hi, ${contact.email}</p><p>${description}</p>`,
+  };
+  contact.userId = req.auth._id; 
+  contact = _.extend(contact, req.body);
+  contact.save((err, result) => {
+    if (err) {
+      return res.status(400).json({
+        error: err,
+      });
+    }
+    sendEmail(emailData);
+    res.json(contact);
+  });
+};
+
+exports.deleteContact = async (req, res) => {
+  const contact = await Contact.findById(req.params.contactId);
+  contact.status = "inactive";
+  contact.save((err, contact) => {
+    if (err) {
+      return res.status(400).json({
+        error: err,
+      });
+    }
+    res.json({
+      message: "contact deleted successfully",
     });
   });
 };

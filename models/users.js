@@ -55,6 +55,13 @@ const userSchema = new mongoose.Schema({
       userId: { type: ObjectId, ref: "User" },
     },
   ],
+  contact: [
+    {
+      title: String,
+      description: String,
+      userId: { type: ObjectId, ref: "User" },
+    },
+  ],
   salt: String,
   createDate: {
     type: Date,

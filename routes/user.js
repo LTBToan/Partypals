@@ -9,6 +9,7 @@ router.get("/user/:userId", requireSignIn,checkRole(["admin"]),controllersUser.g
 router.post("/user/create", requireSignIn,checkRole(["admin"]),controllersUser.createUser);
 router.put("/user/:userId",controllersUser.updateUser);
 router.delete("/user/:userId",requireSignIn,checkRole(["admin"]) ,controllersUser.deleteUser);
+
 router.get(
   "/calendar/:userId",
   requireSignIn,
@@ -33,30 +34,49 @@ router.delete(
   checkRole(["user"]),
   controllersUser.deleteCalendar
 );
+
 router.get(
-  "/notification/:userId",
+  "/notification",
   requireSignIn,
-  checkRole(["user"]),
+  checkRole(["admin", "user"]),
   controllersUser.getNotification
 );
 router.post(
   "/notification/:userId",
   requireSignIn,
-  checkRole(["user"]),
+  checkRole(["admin", "user"]),
   controllersUser.postNotification
 );
 router.put(
   "/notification/:notificationId",
   requireSignIn,
-  checkRole(["user"]),
+  checkRole(["admin", "user"]),
   controllersUser.putNotification
 );
 router.delete(
   "/notification/:notificationId",
   requireSignIn,
-  checkRole(["user"]),
+  checkRole(["admin", "user"]),
   controllersUser.deleteNotification
 );
 router.param("userId",controllersUser.userByLogin);
+
+router.get(
+  "/contact",
+  requireSignIn,
+  checkRole(["admin"]),
+  controllersUser.getAllContact
+);
+router.post("/contact",controllersUser.postContact);
+
+router.put(
+  "/contact/:contactId",
+  requireSignIn,
+  checkRole(["admin"]),
+  controllersUser.putContact
+);
+
+router.delete("/contact/:contactId",requireSignIn,checkRole(["admin"]),controllersUser.deleteContact);
+
 
 module.exports = router;
