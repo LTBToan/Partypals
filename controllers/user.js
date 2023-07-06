@@ -1,9 +1,9 @@
-const fs = require("fs");
 const _ = require("lodash");
 const User = require("../models/users");
 const Calendar = require("../models/calendar");
 const Contact =  require("../models/contact");
 const { sendEmail } = require("../helpers");
+const { upload,uploadFile } = require("../helpers/fbconfig");
 
 exports.userByLogin = (req, res, next, id) => {
   User.findById(id).exec((err, users) => {
@@ -57,6 +57,49 @@ exports.createUser = async (req, res, next) => {
   const user = new User(req.body);
   await user.save();
   res.status(200).json({ message: "Create Success" });
+};
+
+exports.updateUserV2 = async (req, res) => {
+  try {
+    const uploadMiddleware = upload.single('image');
+    uploadMiddleware(req, res, async (err) => {
+      if (err) {
+        return res.status(400).json({
+          error: err.message
+        });
+      }
+      let user = req.profile;
+      user = _.extend(user, req.body);
+      user.updated = Date.now();
+
+      // Kiểm tra nếu có tệp tải lên
+      if (req.file) {
+        const file = req.file;
+
+        // Xử lý tệp tải lên và lưu vào Firebase Storage
+        const filename = await uploadFile(file);
+
+        // Lưu filename vào thông tin người dùng
+        user.image = filename;
+      }
+
+      user.save((err, result) => {
+        if (err) {
+          return res.status(400).json({
+            error: err,
+          });
+        }
+        user.hashed_password = undefined;
+        user.salt = undefined;
+        res.json(user);
+      });
+    });
+  } catch (error) {
+    console.error('Error updating user:', error);
+    res.status(500).json({
+      error: 'Something went wrong'
+    });
+  }
 };
 
 

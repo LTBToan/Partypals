@@ -8,6 +8,7 @@ const { OAuth2Client } = require("google-auth-library");
 const { sendEmail } = require("../helpers");
 const { checkEmail } = require("../helpers");
 const { generateRandomPassword } = require("../helpers");
+const { upload,uploadFile } = require("../helpers/fbconfig");
 const axios = require("axios");
 dotenv.config();
 
@@ -16,32 +17,51 @@ const CLIENT_SECRET = "d9db2ad94b6bd486ef3330810d9d3cc4e6edd8ad";
 
 exports.signUp = async (req, res) => {
   try {
-    const userExists = await User.findOne({ username: req.body.username });
-    const emailExists = await User.findOne({ email: req.body.email });
-    // const emailValid = await checkEmail(req.body.email);
+    const uploadMiddleware = upload.single('image');
+    uploadMiddleware(req, res, async (err) => {
+      if (err) {
+        return res.status(400).json({
+          error: err.message
+        });
+      }
+      try {
+        const userExists = await User.findOne({ username: req.body.username });
+        const emailExists = await User.findOne({ email: req.body.email });
 
+        if (emailExists) {
+          return res.status(403).json({
+            message: "Email is taken!",
+          });
+        }
 
-    // if (!emailValid) {
-    //   return res.status(403).json({
-    //     message: "Email does not exist!",
-    //   });
-    // }
+        if (userExists) {
+          return res.status(403).json({
+            message: "Username is taken!",
+          });
+        }
 
-    if (emailExists) {
-      return res.status(403).json({
-        message: "Email is taken!",
-      });
-    }
+        const user = new User(req.body);
 
-    if (userExists) {
-      return res.status(403).json({
-        message: "Username is taken!",
-      });
-    }
+        // Check if there is an uploaded image
+        if (req.file) {
+          const file = req.file;
 
-    const user = new User(req.body);
-    await user.save();
-    res.status(200).json({ message: "Signup success! Please login." });
+          // Process the uploaded file and save it to Firebase Storage
+          const filename = await uploadFile(file);
+
+          // Save the filename to the user's information
+          user.image = filename;
+        }
+
+        await user.save();
+        res.status(200).json({ message: "Signup success! Please login." });
+      } catch (err) {
+        console.log(err);
+        res.status(500).json({
+          message: "Internal server error",
+        });
+      }
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({
