@@ -4,7 +4,7 @@ module.exports = {
     requestBody: {
       required: true,
       content: {
-        "application/json": {
+        "multipart/form-data": {
           schema: {
             type: "object",
             properties: {
@@ -25,8 +25,15 @@ module.exports = {
                 example: "Dragoncute!123",
               },
               phone: {
-                type:"string",
-                example: "0123456789"
+                type: "string",
+                example: "0123456789",
+              },
+              image: {
+                type: "string",
+                format: "binary",
+              },
+              tax: {
+                type: "string",
               },
             },
           },
