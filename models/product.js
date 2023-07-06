@@ -65,17 +65,5 @@ const productSchema = new mongoose.Schema({
     trim: true,
     required: true,
   },
-  variation: {
-    image: {
-      type: String,
-      trim: true,
-      required: true,
-    },
-    color: {
-      type: String,
-      trim: true,
-      required: true,
-    }
-  },
 });
 module.exports = mongoose.model("Product", productSchema);

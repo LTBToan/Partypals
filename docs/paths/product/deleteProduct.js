@@ -13,32 +13,6 @@ module.exports = {
         },
       },
     ],
-    requestBody: {
-      required: true,
-      content: {
-        "application/json": {
-          schema: {
-            type: "object",
-            properties: {
-              product: {
-                type: "object",
-                properties: {
-                  accountID: {
-                    type: "string",
-                    format: "objectId",
-                  },
-                },
-              },
-            },
-          },
-          example: {
-            product: {
-              accountID: "id",
-            },
-          },
-        },
-      },
-    },
     responses: {
       200: {
         description: "Success",

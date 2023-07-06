@@ -56,18 +56,6 @@ module.exports = {
                   rating: {
                     type: "string",
                   },
-                  variation: {
-                    type: "object",
-                    properties: {
-                      image: {
-                        type: "string",
-                      },
-                      color: {
-                        type: "string",
-                      },
-                    },
-                    required: ["image", "color"], 
-                  },
                 },
               },
               category: {
@@ -94,11 +82,6 @@ module.exports = {
               offerEnd: "2023-06-30",
               new: true,
               rating: "4.5",
-              variation: {
-                image: "variation-image.jpg",
-                color: "red",
-              },
-              accountID: "accountid",
             },
             category: {
               _id: "categoryid",
