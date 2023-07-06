@@ -32,9 +32,6 @@ module.exports = {
                 type: "string",
                 format: "binary",
               },
-              tax: {
-                type: "string",
-              },
             },
           },
         },
