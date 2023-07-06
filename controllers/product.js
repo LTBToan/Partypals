@@ -104,10 +104,6 @@ exports.addProduct = async (req, res) => {
       offerEnd: product.offerEnd,
       new: product.new,
       rating: product.rating,
-      variation: {
-        image: product.variation.image,
-        color: product.variation.color
-      }
     });
 
     const savedProduct = await newProduct.save();
@@ -123,12 +119,14 @@ exports.addProduct = async (req, res) => {
 exports.updateProduct = async (req, res) => {
   try {
     const { product, category } = req.body;
-    if (product.accountID !== req.auth._id) {
-      return res.status(400).json({ error: "Invalid user ID" });
-    }
+    
     const existingProduct = await Product.findById(req.params.productID);
     if (!existingProduct) {
       return res.status(400).json({ error: "Invalid product ID" });
+    }
+
+    if (existingProduct.accountID != req.auth._id) {
+      return res.status(400).json({ error: "Invalid user ID" });
     }
 
     const existingCategory = await Category.findById(category._id);
@@ -148,9 +146,6 @@ exports.updateProduct = async (req, res) => {
     existingProduct.offerEnd = product.offerEnd;
     existingProduct.new = product.new;
     existingProduct.rating = product.rating;
-    existingProduct.variation.image = product.variation.image;
-    existingProduct.variation.color = product.variation.color;
-    
 
     const updatedProduct = await existingProduct.save();
 
@@ -163,16 +158,15 @@ exports.updateProduct = async (req, res) => {
 //detele sp theo id
 exports.deleteProduct = async (req, res) => {
   try {
-    const { product } = req.body;
     const productID = req.params.productID;
-
-    if (product.accountID !== req.auth._id) {
-      return res.status(400).json({ error: "Invalid user ID" });
-    }
 
     const existingProduct = await Product.findById(productID);
     if (!existingProduct) {
       return res.status(400).json({ error: "Invalid product ID" });
+    }
+
+    if (existingProduct.accountID != req.auth._id) {
+      return res.status(400).json({ error: "Invalid user ID" });
     }
 
     await existingProduct.remove();

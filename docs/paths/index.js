@@ -7,6 +7,8 @@ const order = require("./order");
 const category= require("./category");
 const product = require("./product");
 const contact = require("./contact");
+const orderDetail = require("./orderDetail");
+const variation = require("./variation");
 
 
 module.exports = {
@@ -20,5 +22,7 @@ module.exports = {
     ...order,
     ...category,
     ...contact,
+    ...orderDetail,
+    ...variation,
   },
 };
