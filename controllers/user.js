@@ -17,6 +17,18 @@ exports.userByLogin = (req, res, next, id) => {
   });
 };
 
+exports.getUserBySignIn = (req, res) =>{
+  User.findById(req.auth._id).exec((err, user) => {
+    if (err || !user) {
+      return res.status(400).json({
+        error: "User not found",
+      });
+    }
+    return res.status(200).json({user});
+    
+  });
+};
+
 exports.allUsers = (req, res) => {
   const currentPage = parseInt(req.query.page) || 1;
   const perPage = parseInt(req.query.perPage) || 10;

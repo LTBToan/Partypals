@@ -6,9 +6,14 @@ const putCalendar = require("../calendar/putCalendar");
 const deleteCalendar = require("../calendar/deleteCalendar");
 const updateUser = require("./updateUser");
 const createUser = require("./createUser");
+const getUserBySignedIn = require("./getUserBySignedIn");
 module.exports = {
   "/users": {
     ...getAllUser,
+  },
+
+  "/user": {
+    ...getUserBySignedIn,
   },
 
   "/user/create":{
