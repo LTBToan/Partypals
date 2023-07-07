@@ -3,6 +3,8 @@ const router = express.Router();
 const Product = require("../models/product");
 const Category = require("../models/category");
 const User = require("../models/users");
+const _ = require("lodash");
+const { upload,uploadFile } = require("../helpers/fbconfig");
 const mongoose = require("mongoose");
 
 // Trả về sản phẩm dựa trên ID
@@ -82,77 +84,102 @@ exports.allProducts = async (req, res) => {
 
 //addProduct
 exports.addProduct = async (req, res) => {
+  //start
   try {
-    const { product } = req.body;
+    const uploadMiddleware = upload.single('image');
+    uploadMiddleware(req, res, async (err) => {
+      if (err) {
+        return res.status(400).json({
+          error: err.message
+        });
+      }
+      //start
+      try {
 
-    const existingCategory = await Category.findById(product.categoryID);
-    if (!existingCategory) {
-      return res.status(400).json({ error: "Invalid category ID" });
-    }
+        const existingCategory = await Category.findById(mongoose.Types.ObjectId(req.body.categoryID));
+        if (!existingCategory) {
+          return res.status(400).json({ error: "Invalid category ID" });
+        }
 
-    const newProduct = new Product({
-      accountID: req.auth._id,
-      categoryID: existingCategory._id,
-      productName: product.productName,
-      status: product.status,
-      quantity: product.quantity,
-      image: product.image,
-      description: product.description,
-      fullDescription: product.fullDescription,
-      price: product.price,
-      discount: product.discount,
-      offerEnd: product.offerEnd,
-      new: product.new,
-      rating: product.rating,
+        const newProduct = new Product(req.body);
+        newProduct.accountID = req.auth._id;
+
+        // xử lý upload image vô firebase rồi gán vào field image trong product
+        if (req.file) {
+          const file = req.file;
+          const filename = await uploadFile(file);
+          newProduct.image = filename;
+        }
+
+        const savedProduct = await newProduct.save();
+
+        res.status(200).json({ message: "Product added successfully", product: savedProduct });
+      } catch (error) {
+        res.status(500).json({ error: "Failed to add product", errorMessage: error.message });
+      }
+      //end
     });
-
-    const savedProduct = await newProduct.save();
-
-    res.status(200).json({ message: "Product added successfully", product: savedProduct });
-  } catch (error) {
-    res.status(500).json({ error: "Failed to add product", errorMessage: error.message });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Internal server error",
+    });
   }
+  //end
 };
 
 
 //sửa product
 exports.updateProduct = async (req, res) => {
+  //start
   try {
-    const { product, category } = req.body;
-    
-    const existingProduct = await Product.findById(req.params.productID);
-    if (!existingProduct) {
-      return res.status(400).json({ error: "Invalid product ID" });
-    }
+    const uploadMiddleware = upload.single('image');
+    uploadMiddleware(req, res, async (err) => {
+      if (err) {
+        return res.status(400).json({
+          error: err.message
+        });
+      }
+      //start
+      try {
 
-    if (existingProduct.accountID != req.auth._id) {
-      return res.status(400).json({ error: "Invalid user ID" });
-    }
+        let existingProduct = await Product.findById(req.params.productID);
+        if (!existingProduct) {
+          return res.status(400).json({ error: "Invalid product ID" });
+        }
 
-    const existingCategory = await Category.findById(category._id);
-    if (!existingCategory) {
-      return res.status(400).json({ error: "Invalid category ID" });
-    }
+        if (existingProduct.accountID != req.auth._id) {
+          return res.status(400).json({ error: "Invalid user ID" });
+        }
 
-    existingProduct.categoryID = existingCategory._id;
-    existingProduct.productName = product.productName;
-    existingProduct.status = product.status;
-    existingProduct.quantity = product.quantity;
-    existingProduct.image = product.image;
-    existingProduct.description = product.description;
-    existingProduct.fullDescription = product.fullDescription;
-    existingProduct.price = product.price;
-    existingProduct.discount = product.discount;
-    existingProduct.offerEnd = product.offerEnd;
-    existingProduct.new = product.new;
-    existingProduct.rating = product.rating;
+        const existingCategory = await Category.findById(mongoose.Types.ObjectId(req.body.categoryID));
+        if (!existingCategory) {
+          return res.status(400).json({ error: "Invalid category ID" });
+        }
+        existingProduct = _.extend(existingProduct, req.body);
 
-    const updatedProduct = await existingProduct.save();
+        // xử lý upload image vô firebase rồi gán vào field image trong product để cập nhật
+        if (req.file) {
+          const file = req.file;
+          const filename = await uploadFile(file);
+          existingProduct.image = filename;
+        }
 
-    res.status(200).json({ message: "Product updated successfully", product: updatedProduct });
-  } catch (error) {
-    res.status(500).json({ error: "Failed to update product", errorMessage: error.message });
+        const updatedProduct = await existingProduct.save();
+
+        res.status(200).json({ message: "Product updated successfully", product: updatedProduct });
+      } catch (error) {
+        res.status(500).json({ error: "Failed to update product", errorMessage: error.message });
+      }
+      //end
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Internal server error",
+    });
   }
+  //end
 };
 
 //detele sp theo id
