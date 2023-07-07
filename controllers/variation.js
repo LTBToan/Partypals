@@ -3,6 +3,8 @@ const router = express.Router();
 const Product = require("../models/product");
 const Variation = require("../models/variation");
 const User = require("../models/users");
+const _ = require("lodash");
+const { upload,uploadFile } = require("../helpers/fbconfig");
 const mongoose = require("mongoose");
 
 //trả về variation theo id
@@ -51,59 +53,99 @@ exports.allVariations = async (req, res) => {
 
 // add variation
 exports.addVariation = async (req, res) => {
+  //start
   try {
-    const { variation } = req.body;
-    console.log(variation.productID);
-    const existingProduct = await Product.findById(variation.productID);
-    if (!existingProduct) {
-      return res.status(400).json({ error: "Invalid product ID" });
-    }
+    const uploadMiddleware = upload.single('image');
+    uploadMiddleware(req, res, async (err) => {
+      if (err) {
+        return res.status(400).json({
+          error: err.message
+        });
+      }
+      //start
+      try {
+        const existingProduct = await Product.findById(mongoose.Types.ObjectId(req.body.productID));
+        if (!existingProduct) {
+          return res.status(400).json({ error: "Invalid product ID" });
+        }
 
-    if (existingProduct.accountID != req.auth._id) {
-      return res.status(401).json({ error: "Not authorized" });
-    }
+        if (existingProduct.accountID != req.auth._id) {
+          return res.status(401).json({ error: "Not authorized" });
+        }
 
-    const newVariation = new Variation({
-      image: variation.image,
-      color: variation.color,
-      stock: variation.stock,
-      productID: existingProduct._id,
+        const newVariation = new Variation(req.body);
+
+        //xử lý lưu vào firebase và gán vào field image
+        if (req.file) {
+          const file = req.file;
+          const filename = await uploadFile(file);
+          newVariation.image = filename;
+        }
+
+        const savedVariation = await newVariation.save();
+
+        res.status(200).json({ message: "Variation added successfully", variation: savedVariation });
+      } catch (error) {
+        res.status(500).json({ error: "Failed to add variation", errorMessage: error.message });
+      }
+      //end
     });
-
-    const savedVariation = await newVariation.save();
-
-    res.status(200).json({ message: "Variation added successfully", variation: savedVariation });
-  } catch (error) {
-    res.status(500).json({ error: "Failed to add variation", errorMessage: error.message });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Internal server error",
+    });
   }
+  //end
 };
 
 // update variation
 exports.updateVariation = async (req, res) => {
+  //start
   try {
-    const { variation } = req.body;
-    const variationID = req.params.variationID;
+    const uploadMiddleware = upload.single('image');
+    uploadMiddleware(req, res, async (err) => {
+      if (err) {
+        return res.status(400).json({
+          error: err.message
+        });
+      }
+      //start
+      try {
+        let existingVariation = await Variation.findById(req.params.variationID);
+        if (!existingVariation) {
+          return res.status(400).json({ error: "Invalid variation ID" });
+        }
 
-    const existingVariation = await Variation.findById(variationID);
-    if (!existingVariation) {
-      return res.status(400).json({ error: "Invalid variation ID" });
-    }
+        const existingProduct = await Product.findById(existingVariation.productID);
+        if (existingProduct.accountID != req.auth._id) {
+          return res.status(401).json({ error: "Not authorized" });
+        }
 
-    const existingProduct = await Product.findById(existingVariation.productID);
-    if (existingProduct.accountID != req.auth._id) {
-      return res.status(401).json({ error: "Not authorized" });
-    }
+        existingVariation = _.extend(existingVariation, req.body);
 
-    existingVariation.image = variation.image;
-    existingVariation.color = variation.color;
-    existingVariation.stock = variation.stock;
+        //xử lý lưu vào firebase và gán vào field image
+        if (req.file) {
+          const file = req.file;
+          const filename = await uploadFile(file);
+          existingVariation.image = filename;
+        }
 
-    const updatedVariation = await existingVariation.save();
+        const updatedVariation = await existingVariation.save();
 
-    res.status(200).json({ message: "Variation updated successfully", variation: updatedVariation });
-  } catch (error) {
-    res.status(500).json({ error: "Failed to update variation", errorMessage: error.message });
+        res.status(200).json({ message: "Variation updated successfully", variation: updatedVariation });
+      } catch (error) {
+        res.status(500).json({ error: "Failed to update variation", errorMessage: error.message });
+      }
+      //end
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Internal server error",
+    });
   }
+  //end
 };
 
 // delete variation

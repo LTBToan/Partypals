@@ -16,33 +16,32 @@ module.exports = {
     requestBody: {
       required: true,
       content: {
-        "application/json": {
+        "multipart/form-data": {
           schema: {
             type: "object",
             properties: {
-              variation: {
-                type: "object",
-                properties: {
-                  image: {
-                    type: "string",
-                  },
-                  color: {
-                    type: "string",
-                  },
-                  stock: {
-                    type: "number",
-                  },
-                },
+              image: {
+                type: "string",
+                format: "binary",
+                exmaple: "imageurl",
+              },
+              color: {
+                type: "string",
+                exmaple: "red",
+              },
+              stock: {
+                type: "number",
+                exmaple: 10,
               },
             },
           },
-          example: {
-            variation: {
-              image: "imageurl",
-              color: "red",
-              stock: 10,
-            },
-          },
+          // example: {
+          //   variation: {
+          //     image: "imageurl",
+          //     color: "red",
+          //     stock: 10,
+          //   },
+          // },
         },
       },
     },
