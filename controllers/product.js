@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const Product = require("../models/product");
-const Category = require("../models/category");
 const User = require("../models/users");
 const _ = require("lodash");
 const { upload,uploadFile } = require("../helpers/fbconfig");
@@ -96,11 +95,6 @@ exports.addProduct = async (req, res) => {
       //start
       try {
 
-        const existingCategory = await Category.findById(mongoose.Types.ObjectId(req.body.categoryID));
-        if (!existingCategory) {
-          return res.status(400).json({ error: "Invalid category ID" });
-        }
-
         const newProduct = new Product(req.body);
         newProduct.accountID = req.auth._id;
 
@@ -150,11 +144,6 @@ exports.updateProduct = async (req, res) => {
 
         if (existingProduct.accountID != req.auth._id) {
           return res.status(400).json({ error: "Invalid user ID" });
-        }
-
-        const existingCategory = await Category.findById(mongoose.Types.ObjectId(req.body.categoryID));
-        if (!existingCategory) {
-          return res.status(400).json({ error: "Invalid category ID" });
         }
         existingProduct = _.extend(existingProduct, req.body);
 

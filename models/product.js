@@ -7,9 +7,9 @@ const productSchema = new mongoose.Schema({
     ref: "Users",
     required: true,
   },
-  categoryID: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Category",
+  category: {
+    type: String,
+    trim: true,
     required: true,
   },
   productName: {
