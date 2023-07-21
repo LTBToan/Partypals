@@ -10,8 +10,10 @@ module.exports = {
     ...addVariation,
   },
   "/variation/{variationID}": {
-    ...getVariationById,
     ...updateVariation,
     ...deleteVariation,
+  },
+  "/variation/{productID}": {
+    ...getVariationById,
   },
 };
