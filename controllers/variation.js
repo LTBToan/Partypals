@@ -10,9 +10,7 @@ const mongoose = require("mongoose");
 //trả về variation theo id
 exports.getVariationById = async (req, res) => {
   try {
-    const variationId = req.params.variationID;
-    console.log(variationId);
-    const variation = await Variation.findById(variationId);
+    const variation = await Variation.find({productID: req.params.productID});
 
     if (!variation) {
       return res.status(404).json({ error: "Variation not found" });

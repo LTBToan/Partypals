@@ -1,12 +1,12 @@
 module.exports = {
     get: {
       tags: ["variation"],
-      summary: "Return variation by id",
+      summary: "Return variation by productID",
       parameters: [
         {
           in: "path",
-          name: "variationID",
-          description: "variationID",
+          name: "productID",
+          description: "productID",
           schema: {
             type: "String",
             format: "objectId",
