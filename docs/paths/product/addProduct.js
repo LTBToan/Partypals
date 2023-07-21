@@ -54,9 +54,9 @@ module.exports = {
                 type: "string",
                 example: "4.5"
               },
-              categoryID: {
+              category: {
                 type: "string",
-                example: "categoryid"
+                example: "ghê1chan"
               },
             },
           },
